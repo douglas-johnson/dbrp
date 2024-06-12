@@ -10,6 +10,7 @@ import type {
   CustomerAccount,
   HydrogenCart,
   HydrogenSessionData,
+  WithCache,
 } from '@shopify/hydrogen';
 import type {
   LanguageCode,
@@ -34,6 +35,7 @@ declare global {
     PUBLIC_STOREFRONT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_URL: string;
+	'megaphone-api-token': string;
   }
 
   /**
@@ -57,6 +59,7 @@ declare module '@shopify/remix-oxygen' {
     customerAccount: CustomerAccount;
     session: AppSession;
     waitUntil: ExecutionContext['waitUntil'];
+	withCache: WithCache;
   }
 
   /**

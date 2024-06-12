@@ -8,6 +8,7 @@ import {
   createStorefrontClient,
   storefrontRedirect,
   createCustomerAccountClient,
+  createWithCache,
 } from '@shopify/hydrogen';
 import {
   createRequestHandler,
@@ -54,6 +55,9 @@ export default {
         storefrontHeaders: getStorefrontHeaders(request),
       });
 
+	  // Create withCache object
+	  const withCache = createWithCache({cache, waitUntil});
+
       /**
        * Create a client for Customer Account API.
        */
@@ -91,6 +95,7 @@ export default {
           cart,
           env,
           waitUntil,
+		  withCache,
         }),
       });
 
