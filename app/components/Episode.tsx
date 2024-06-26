@@ -1,5 +1,16 @@
 import { type Episode as EpisodeType } from "~/modules/episodes/types"
 import Imgix from "./Imgix"
+import sanitizeHtml from 'sanitize-html';
+
+function cleanEpisodeSummaryHTML( html: string ): string {
+	return [
+		(html: string) => sanitizeHtml( html ),
+		(html: string) => html.replaceAll( /<p><br\s?\/?><\/p>/g, '' )
+	].reduce(
+		(x, f) => f(x),
+		html
+	)
+}
 
 export default function Episode( { episode }: { episode: EpisodeType } ) {
 	return (
@@ -21,7 +32,7 @@ export default function Episode( { episode }: { episode: EpisodeType } ) {
 				</figure>
 			) : null}
 			<p>{episode.subtitle}</p>
-			<div dangerouslySetInnerHTML={{__html: episode.summary}}></div>
+			<div dangerouslySetInnerHTML={{__html: cleanEpisodeSummaryHTML( episode.summary )}}></div>
 		</article>
 	);
 }

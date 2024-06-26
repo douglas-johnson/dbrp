@@ -1,4 +1,4 @@
-import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import { Await, useLoaderData, type MetaFunction } from '@remix-run/react';
 import loadEpisodes from '~/modules/episodes/loadEpisodes';
 import { Suspense } from 'react';
@@ -9,8 +9,8 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({context}: LoaderFunctionArgs) => {
-	return defer({
-		episodes: loadEpisodes( context, 10 )
+	return json({
+		episodes: await loadEpisodes( context, 10 )
 	});
 };
 
@@ -19,11 +19,7 @@ export default function Podcast() {
 	return ( 
 		<>
 			<h1>Podcast</h1>
-			<Suspense fallback={<div>Loading episodes</div>}>
-				<Await resolve={episodes}>
-					{(episodes) => episodes.map( episode => <Episode key={episode.id} episode={episode} />)}
-				</Await>
-			</Suspense>
+			{episodes.map( episode => <Episode key={episode.id} episode={episode} />)}
 		</>
 	);
 }

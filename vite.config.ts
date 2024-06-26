@@ -23,4 +23,11 @@ export default defineConfig({
     // withtout inlining assets as base64:
     assetsInlineLimit: 0,
   },
+  ssr: {
+    optimizeDeps: {
+      include: [
+		'sanitize-html'
+	  ]
+    }
+  }
 });
