@@ -7,6 +7,9 @@ import type {
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
 
+import loadEpisodes from '~/modules/episodes/loadEpisodes';
+import Episode from '~/components/Episode';
+
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
@@ -16,8 +19,9 @@ export async function loader({context}: LoaderFunctionArgs) {
   const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
   const featuredCollection = collections.nodes[0];
   const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
+	const episodes = loadEpisodes( context, 1 );
 
-  return defer({featuredCollection, recommendedProducts});
+  return defer({featuredCollection, recommendedProducts, episodes});
 }
 
 export default function Homepage() {
@@ -26,6 +30,12 @@ export default function Homepage() {
     <div className="home">
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
+	  <h2>Latest Episode</h2>
+	  <Suspense fallback={<div>Loading latest episode</div>}>
+		<Await resolve={data.episodes}>
+			{(episodes) => ( <Episode episode={episodes[0]} />)}
+		</Await>
+	</Suspense>
     </div>
   );
 }
