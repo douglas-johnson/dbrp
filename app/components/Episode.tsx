@@ -1,10 +1,12 @@
 import { type Episode as EpisodeType } from "~/modules/episodes/types"
 import Imgix from "./Imgix"
 import sanitizeHtml from 'sanitize-html';
+import anchorme from "anchorme";
 
 function cleanEpisodeSummaryHTML( html: string ): string {
 	return [
 		(html: string) => sanitizeHtml( html ),
+		(html: string) => anchorme({ input: html, options: {protocol: 'https://'} }),
 		(html: string) => html.replaceAll( /<p><br\s?\/?><\/p>/g, '' )
 	].reduce(
 		(x, f) => f(x),
