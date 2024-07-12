@@ -5,4 +5,5 @@ export interface Episode {
 	subtitle: string;
 	summary: string;
 	imageFile?: string;
+	pubdate: string;
 }
