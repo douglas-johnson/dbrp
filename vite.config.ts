@@ -26,7 +26,8 @@ export default defineConfig({
   ssr: {
     optimizeDeps: {
       include: [
-		'sanitize-html'
+		'sanitize-html',
+		'anchorme'
 	  ]
     }
   }
