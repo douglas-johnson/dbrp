@@ -16,9 +16,13 @@ export default async function loadEpisodes( context: AppLoadContext, count: numb
 		if (!response.ok) {
 			return [];
 		}
-		return await response.json<Episode[]>()
+		return (
+			await response.json<Episode[]>()
+		)
+		.filter(e => 'published' === e.status)
+		.sort((a, b) => Math.sign( Date.parse(b.pubdate) - Date.parse(a.pubdate)));
 	});
 
-	return episodes.filter(e => 'published' === e.status).slice( 0, count );
+	return episodes.slice( 0, count );
 }
 
