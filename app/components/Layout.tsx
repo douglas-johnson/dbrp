@@ -36,8 +36,6 @@ export function Layout({
   isLoggedIn,
 }: LayoutProps) {
 
-	// const dialogRef = useRef(null);
-
 	const menuRef = useRef(null);
 	const cartRef = useRef(null);
 	const searchRef = useRef(null);

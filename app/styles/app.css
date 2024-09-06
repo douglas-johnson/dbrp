@@ -8,6 +8,39 @@
   --color-light: #fff;
 }
 
+/**
+ * components/Dialog
+ */
+.dbrp-dialog {
+	inset-inline-start: auto;
+	inset-inline-end: 0;
+
+	inline-size: min(100vw, 24em);
+
+	block-size: 100dvh;
+	max-block-size: initial;
+
+	animation: enter-dialog linear 300ms;
+
+	border: none;
+	margin: 0;
+}
+
+@media screen and (prefers-reduced-motion) {
+	.dbrp-dialog {
+		animation-duration: 1ms;
+	}
+}
+
+@keyframes enter-dialog{
+	from {
+		transform: translate3d(100%, 0, 0);
+	}
+	to {
+		transform: translate3d(0,0,0);
+	}
+}
+
 /*
 * --------------------------------------------------
 * components/Aside
