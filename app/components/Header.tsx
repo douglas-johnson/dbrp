@@ -4,59 +4,86 @@ import type {HeaderQuery} from 'storefrontapi.generated';
 import type {LayoutProps} from './Layout';
 import {useRootLoaderData} from '~/lib/root-data';
 
-type HeaderProps = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'>;
+type HeaderProps = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn' | 'cartRef' | 'searchRef' | 'menuRef'>;
 
 type Viewport = 'desktop' | 'mobile';
 
-export function Header({header, isLoggedIn, cart}: HeaderProps) {
+export function Header({header, isLoggedIn, cart, cartRef, searchRef, menuRef}: HeaderProps) {
   const {shop, menu} = header;
   return (
     <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+		<NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
+			<strong>{shop.name}</strong>
+		</NavLink>
+		<HeaderCtas
+			isLoggedIn={isLoggedIn}
+			cart={cart}
+			cartRef={cartRef}
+			searchRef={searchRef}
+			menuRef={menuRef}
+		/>
     </header>
   );
 }
+
+const FALLBACK_HEADER_MENU = {
+	id: 'gid://shopify/Menu/199655587896',
+	items: [
+	  {
+		id: 'gid://shopify/MenuItem/461609500728',
+		resourceId: null,
+		tags: [],
+		title: 'Collections',
+		type: 'HTTP',
+		url: '/collections',
+		items: [],
+	  },
+	  {
+		id: 'gid://shopify/MenuItem/461609533496',
+		resourceId: null,
+		tags: [],
+		title: 'Blog',
+		type: 'HTTP',
+		url: '/blogs/journal',
+		items: [],
+	  },
+	  {
+		id: 'gid://shopify/MenuItem/461609566264',
+		resourceId: null,
+		tags: [],
+		title: 'Policies',
+		type: 'HTTP',
+		url: '/policies',
+		items: [],
+	  },
+	  {
+		id: 'gid://shopify/MenuItem/461609599032',
+		resourceId: 'gid://shopify/Page/92591030328',
+		tags: [],
+		title: 'About',
+		type: 'PAGE',
+		url: '/pages/about',
+		items: [],
+	  },
+	],
+  };
 
 export function HeaderMenu({
   menu,
   primaryDomainUrl,
   viewport,
+  menuRef
 }: {
   menu: HeaderProps['header']['menu'];
   primaryDomainUrl: HeaderQuery['shop']['primaryDomain']['url'];
   viewport: Viewport;
+  menuRef: React.MutableRefObject<null>;
 }) {
   const {publicStoreDomain} = useRootLoaderData();
   const className = `header-menu-${viewport}`;
 
-  function closeAside(event: React.MouseEvent<HTMLAnchorElement>) {
-    if (viewport === 'mobile') {
-      event.preventDefault();
-      window.location.href = event.currentTarget.href;
-    }
-  }
-
   return (
     <nav className={className} role="navigation">
-      {viewport === 'mobile' && (
-        <NavLink
-          end
-          onClick={closeAside}
-          prefetch="intent"
-          style={activeLinkStyle}
-          to="/"
-        >
-          Home
-        </NavLink>
-      )}
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
 
@@ -72,10 +99,10 @@ export function HeaderMenu({
             className="header-menu-item"
             end
             key={item.id}
-            onClick={closeAside}
             prefetch="intent"
             style={activeLinkStyle}
             to={url}
+			onClick={() => menuRef.current?.close()}
           >
             {item.title}
           </NavLink>
@@ -88,10 +115,13 @@ export function HeaderMenu({
 function HeaderCtas({
   isLoggedIn,
   cart,
-}: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
+  cartRef,
+  searchRef,
+  menuRef
+}: Pick<HeaderProps, 'isLoggedIn' | 'cart' | 'cartRef' | 'searchRef' | 'menuRef'>) {
   return (
     <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
+      <HeaderMenuMobileToggle menuRef={menuRef} />
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
         <Suspense fallback="Sign in">
           <Await resolve={isLoggedIn} errorElement="Sign in">
@@ -99,82 +129,47 @@ function HeaderCtas({
           </Await>
         </Suspense>
       </NavLink>
-      <SearchToggle />
-      <CartToggle cart={cart} />
+      <SearchToggle searchRef={searchRef} />
+      <CartToggle cart={cart} cartRef={cartRef} />
     </nav>
   );
 }
 
-function HeaderMenuMobileToggle() {
+function HeaderMenuMobileToggle({menuRef}: {menuRef: React.MutableRefObject<null>}) {
+	return <button type="button" onClick={() => menuRef.current?.showModal()}>☰ Menu</button>
+// replace shopify / hydrogen version
+// 	return (
+	
+//     <a className="header-menu-mobile-toggle" href="#mobile-menu-aside">
+//       <h3>☰</h3>
+//     </a>
+//   );
+}
+
+function SearchToggle({searchRef}: {searchRef: React.MutableRefObject<null>}) {
+	return <button type="button" onClick={() => searchRef.current?.showModal()}>Search</button>
+	// replaced shopify / hydrogen version
+	// return <a href="#search-aside">Search</a>;
+}
+
+function CartBadge({count, cartRef}: {count: number, cartRef: React.MutableRefObject<null>}) {
+  return <button type="button" onClick={() => cartRef.current?.showModal()}>Cart {count}</button>
+  // replace shopify / hydrogen version
+  // return <a href="#cart-aside">Cart {count}</a>;
+}
+
+function CartToggle({cart, cartRef}: Pick<HeaderProps, 'cart' | 'cartRef'>) {
   return (
-    <a className="header-menu-mobile-toggle" href="#mobile-menu-aside">
-      <h3>☰</h3>
-    </a>
-  );
-}
-
-function SearchToggle() {
-  return <a href="#search-aside">Search</a>;
-}
-
-function CartBadge({count}: {count: number}) {
-  return <a href="#cart-aside">Cart {count}</a>;
-}
-
-function CartToggle({cart}: Pick<HeaderProps, 'cart'>) {
-  return (
-    <Suspense fallback={<CartBadge count={0} />}>
+    <Suspense fallback={<CartBadge cartRef={cartRef} count={0} />}>
       <Await resolve={cart}>
         {(cart) => {
-          if (!cart) return <CartBadge count={0} />;
-          return <CartBadge count={cart.totalQuantity || 0} />;
+          if (!cart) return <CartBadge cartRef={cartRef} count={0} />;
+          return <CartBadge cartRef={cartRef} count={cart.totalQuantity || 0} />;
         }}
       </Await>
     </Suspense>
   );
 }
-
-const FALLBACK_HEADER_MENU = {
-  id: 'gid://shopify/Menu/199655587896',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461609500728',
-      resourceId: null,
-      tags: [],
-      title: 'Collections',
-      type: 'HTTP',
-      url: '/collections',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609533496',
-      resourceId: null,
-      tags: [],
-      title: 'Blog',
-      type: 'HTTP',
-      url: '/blogs/journal',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609566264',
-      resourceId: null,
-      tags: [],
-      title: 'Policies',
-      type: 'HTTP',
-      url: '/policies',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609599032',
-      resourceId: 'gid://shopify/Page/92591030328',
-      tags: [],
-      title: 'About',
-      type: 'PAGE',
-      url: '/pages/about',
-      items: [],
-    },
-  ],
-};
 
 function activeLinkStyle({
   isActive,

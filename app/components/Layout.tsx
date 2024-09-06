@@ -1,5 +1,5 @@
 import {Await} from '@remix-run/react';
-import {Suspense} from 'react';
+import React, {Suspense} from 'react';
 import type {
   CartApiQueryFragment,
   FooterQuery,
@@ -14,12 +14,18 @@ import {
   PredictiveSearchResults,
 } from '~/components/Search';
 
+import { useRef } from 'react';
+import Dialog from '~/components/Dialog';
+
 export type LayoutProps = {
   cart: Promise<CartApiQueryFragment | null>;
   children?: React.ReactNode;
   footer: Promise<FooterQuery>;
   header: HeaderQuery;
   isLoggedIn: Promise<boolean>;
+  menuRef: React.MutableRefObject<null>;
+  cartRef: React.MutableRefObject<null>;
+  searchRef: React.MutableRefObject<null>;
 };
 
 export function Layout({
@@ -29,12 +35,19 @@ export function Layout({
   header,
   isLoggedIn,
 }: LayoutProps) {
+
+	// const dialogRef = useRef(null);
+
+	const menuRef = useRef(null);
+	const cartRef = useRef(null);
+	const searchRef = useRef(null);
+
   return (
     <>
-      <CartAside cart={cart} />
-      <SearchAside />
-      <MobileMenuAside menu={header?.menu} shop={header?.shop} />
-      {header && <Header header={header} cart={cart} isLoggedIn={isLoggedIn} />}
+      <CartAside cart={cart} cartRef={cartRef} />
+      <SearchAside searchRef={searchRef} />
+      <MobileMenuAside menu={header?.menu} shop={header?.shop} menuRef={menuRef} />
+      {header && <Header header={header} menuRef={menuRef} cartRef={cartRef} cart={cart} searchRef={searchRef} isLoggedIn={isLoggedIn} />}
       <main>{children}</main>
       <Suspense>
         <Await resolve={footer}>
@@ -45,9 +58,9 @@ export function Layout({
   );
 }
 
-function CartAside({cart}: {cart: LayoutProps['cart']}) {
+function CartAside({cart, cartRef}: {cart: LayoutProps['cart'], cartRef: React.MutableRefObject<null>}) {
   return (
-    <Aside id="cart-aside" heading="CART">
+    <Dialog ref={cartRef}>
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
           {(cart) => {
@@ -55,15 +68,14 @@ function CartAside({cart}: {cart: LayoutProps['cart']}) {
           }}
         </Await>
       </Suspense>
-    </Aside>
+    </Dialog>
   );
 }
 
-function SearchAside() {
+function SearchAside( {searchRef}: {searchRef: React.MutableRefObject<null>}) {
   return (
-    <Aside id="search-aside" heading="SEARCH">
+    <Dialog ref={searchRef}>
       <div className="predictive-search">
-        <br />
         <PredictiveSearchForm>
           {({fetchResults, inputRef}) => (
             <div>
@@ -90,27 +102,30 @@ function SearchAside() {
         </PredictiveSearchForm>
         <PredictiveSearchResults />
       </div>
-    </Aside>
+    </Dialog>
   );
 }
 
 function MobileMenuAside({
   menu,
   shop,
+  menuRef
 }: {
   menu: HeaderQuery['menu'];
   shop: HeaderQuery['shop'];
+  menuRef: React.MutableRefObject<null>;
 }) {
   return (
     menu &&
     shop?.primaryDomain?.url && (
-      <Aside id="mobile-menu-aside" heading="MENU">
+      <Dialog ref={menuRef}>
         <HeaderMenu
           menu={menu}
           viewport="mobile"
           primaryDomainUrl={shop.primaryDomain.url}
+		  menuRef={menuRef}
         />
-      </Aside>
+      </Dialog>
     )
   );
 }
