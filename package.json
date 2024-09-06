@@ -16,10 +16,10 @@
   "dependencies": {
     "@remix-run/react": "^2.10.1",
     "@remix-run/server-runtime": "^2.10.1",
-    "@shopify/cli": "^3.64.1",
+    "@shopify/cli": "^3.65.3",
     "@shopify/cli-hydrogen": "^8.0.4",
-    "@shopify/hydrogen": "^2024.7.2",
-    "@shopify/remix-oxygen": "^2.0.5",
+    "@shopify/hydrogen": "^2024.7.4",
+    "@shopify/remix-oxygen": "^2.0.6",
     "anchorme": "^3.0.8",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
