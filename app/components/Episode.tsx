@@ -16,7 +16,7 @@ function cleanEpisodeSummaryHTML( html: string ): string {
 
 export default function Episode( { episode }: { episode: EpisodeType } ) {
 	return (
-		<article>
+		<article className="rhythm">
 			<h2>{episode.title}</h2>
 			{episode.imageFile ? (
 				<figure>
@@ -34,7 +34,7 @@ export default function Episode( { episode }: { episode: EpisodeType } ) {
 				</figure>
 			) : null}
 			<p>{episode.subtitle}</p>
-			<div dangerouslySetInnerHTML={{__html: cleanEpisodeSummaryHTML( episode.summary )}}></div>
+			<div className="rhythm" dangerouslySetInnerHTML={{__html: cleanEpisodeSummaryHTML( episode.summary )}}></div>
 		</article>
 	);
 }

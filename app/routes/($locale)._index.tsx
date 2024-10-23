@@ -11,14 +11,14 @@ import loadEpisodes from '~/modules/episodes/loadEpisodes';
 import Episode from '~/components/Episode';
 
 export const meta: MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [{title: 'Dad Bod Rap Pod'}];
 };
 
 export async function loader({context}: LoaderFunctionArgs) {
-  const {storefront} = context;
-  const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
-  const featuredCollection = collections.nodes[0];
-  const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
+	const {storefront} = context;
+	const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
+	const featuredCollection = collections.nodes[0];
+	const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
 	const episodes = loadEpisodes( context, 1 );
 
   return defer({featuredCollection, recommendedProducts, episodes});
@@ -95,7 +95,6 @@ function RecommendedProducts({
           )}
         </Await>
       </Suspense>
-      <br />
     </div>
   );
 }

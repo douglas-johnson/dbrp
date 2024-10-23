@@ -23,9 +23,9 @@ export type LayoutProps = {
   footer: Promise<FooterQuery>;
   header: HeaderQuery;
   isLoggedIn: Promise<boolean>;
-  menuRef: React.MutableRefObject<null>;
-  cartRef: React.MutableRefObject<null>;
-  searchRef: React.MutableRefObject<null>;
+  menuRef: React.MutableRefObject<HTMLDialogElement|null>;
+  cartRef: React.MutableRefObject<HTMLDialogElement|null>;
+  searchRef: React.MutableRefObject<HTMLDialogElement|null>;
 };
 
 export function Layout({
@@ -36,9 +36,9 @@ export function Layout({
   isLoggedIn,
 }: LayoutProps) {
 
-	const menuRef = useRef(null);
-	const cartRef = useRef(null);
-	const searchRef = useRef(null);
+	const menuRef = useRef<HTMLDialogElement | null>(null);
+	const cartRef = useRef<HTMLDialogElement | null>(null);
+	const searchRef = useRef<HTMLDialogElement | null>(null);
 
   return (
     <>
@@ -56,7 +56,7 @@ export function Layout({
   );
 }
 
-function CartAside({cart, cartRef}: {cart: LayoutProps['cart'], cartRef: React.MutableRefObject<null>}) {
+function CartAside({cart, cartRef}: {cart: LayoutProps['cart'], cartRef: React.MutableRefObject<HTMLDialogElement|null>}) {
   return (
     <Dialog ref={cartRef}>
       <Suspense fallback={<p>Loading cart ...</p>}>
@@ -70,7 +70,7 @@ function CartAside({cart, cartRef}: {cart: LayoutProps['cart'], cartRef: React.M
   );
 }
 
-function SearchAside( {searchRef}: {searchRef: React.MutableRefObject<null>}) {
+function SearchAside( {searchRef}: {searchRef: React.MutableRefObject<HTMLDialogElement|null>}) {
   return (
     <Dialog ref={searchRef}>
       <div className="predictive-search">
@@ -111,7 +111,7 @@ function MobileMenuAside({
 }: {
   menu: HeaderQuery['menu'];
   shop: HeaderQuery['shop'];
-  menuRef: React.MutableRefObject<null>;
+  menuRef: React.MutableRefObject<HTMLDialogElement|null>;
 }) {
   return (
     menu &&

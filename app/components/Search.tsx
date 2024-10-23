@@ -329,7 +329,9 @@ export function PredictiveSearchResults() {
     searchInputRef.current.blur();
     searchInputRef.current.value = '';
     // close the aside
-    window.location.href = event.currentTarget.href;
+    // window.location.href = event.currentTarget.href;
+
+	// update this to close the dialog
   }
 
   if (state === 'loading') {

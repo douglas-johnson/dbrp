@@ -12,7 +12,7 @@ export function Header({header, isLoggedIn, cart, cartRef, searchRef, menuRef}: 
   const {shop, menu} = header;
   return (
     <header className="header">
-		<NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
+		<NavLink prefetch="intent" to="/" end>
 			<strong>{shop.name}</strong>
 		</NavLink>
 		<HeaderCtas
@@ -77,7 +77,7 @@ export function HeaderMenu({
   menu: HeaderProps['header']['menu'];
   primaryDomainUrl: HeaderQuery['shop']['primaryDomain']['url'];
   viewport: Viewport;
-  menuRef: React.MutableRefObject<null>;
+  menuRef: React.MutableRefObject<HTMLDialogElement|null>;
 }) {
   const {publicStoreDomain} = useRootLoaderData();
   const className = `header-menu-${viewport}`;
@@ -100,7 +100,6 @@ export function HeaderMenu({
             end
             key={item.id}
             prefetch="intent"
-            style={activeLinkStyle}
             to={url}
 			onClick={() => menuRef.current?.close()}
           >
@@ -122,7 +121,7 @@ function HeaderCtas({
   return (
     <nav className="header-ctas" role="navigation">
       <HeaderMenuMobileToggle menuRef={menuRef} />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
+      <NavLink prefetch="intent" to="/account">
         <Suspense fallback="Sign in">
           <Await resolve={isLoggedIn} errorElement="Sign in">
             {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
@@ -135,7 +134,7 @@ function HeaderCtas({
   );
 }
 
-function HeaderMenuMobileToggle({menuRef}: {menuRef: React.MutableRefObject<null>}) {
+function HeaderMenuMobileToggle({menuRef}: {menuRef: React.MutableRefObject<HTMLDialogElement|null>}) {
 	return <button type="button" onClick={() => menuRef.current?.showModal()}>☰ Menu</button>
 // replace shopify / hydrogen version
 // 	return (
@@ -146,13 +145,13 @@ function HeaderMenuMobileToggle({menuRef}: {menuRef: React.MutableRefObject<null
 //   );
 }
 
-function SearchToggle({searchRef}: {searchRef: React.MutableRefObject<null>}) {
+function SearchToggle({searchRef}: {searchRef: React.MutableRefObject<HTMLDialogElement|null>}) {
 	return <button type="button" onClick={() => searchRef.current?.showModal()}>Search</button>
 	// replaced shopify / hydrogen version
 	// return <a href="#search-aside">Search</a>;
 }
 
-function CartBadge({count, cartRef}: {count: number, cartRef: React.MutableRefObject<null>}) {
+function CartBadge({count, cartRef}: {count: number, cartRef: React.MutableRefObject<HTMLDialogElement|null>}) {
   return <button type="button" onClick={() => cartRef.current?.showModal()}>Cart {count}</button>
   // replace shopify / hydrogen version
   // return <a href="#cart-aside">Cart {count}</a>;
@@ -169,17 +168,4 @@ function CartToggle({cart, cartRef}: Pick<HeaderProps, 'cart' | 'cartRef'>) {
       </Await>
     </Suspense>
   );
-}
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
-  };
 }
