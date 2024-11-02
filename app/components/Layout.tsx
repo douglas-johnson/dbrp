@@ -1,11 +1,10 @@
-import {Await} from '@remix-run/react';
+import {Await, Link} from '@remix-run/react';
 import React, {Suspense} from 'react';
 import type {
   CartApiQueryFragment,
   FooterQuery,
   HeaderQuery,
 } from 'storefrontapi.generated';
-import {Aside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/Cart';
@@ -13,6 +12,14 @@ import {
   PredictiveSearchForm,
   PredictiveSearchResults,
 } from '~/components/Search';
+
+import {Image, Money} from '@shopify/hydrogen';
+
+import type {
+	// FeaturedCollectionFragment,
+	RecommendedProductsQuery,
+  } from 'storefrontapi.generated';
+
 
 import { useRef } from 'react';
 import Dialog from '~/components/Dialog';
@@ -23,9 +30,7 @@ export type LayoutProps = {
   footer: Promise<FooterQuery>;
   header: HeaderQuery;
   isLoggedIn: Promise<boolean>;
-  menuRef: React.MutableRefObject<HTMLDialogElement|null>;
-  cartRef: React.MutableRefObject<HTMLDialogElement|null>;
-  searchRef: React.MutableRefObject<HTMLDialogElement|null>;
+  products: Promise<RecommendedProductsQuery>;
 };
 
 export function Layout({
@@ -34,6 +39,7 @@ export function Layout({
   footer,
   header,
   isLoggedIn,
+  products
 }: LayoutProps) {
 
 	const menuRef = useRef<HTMLDialogElement | null>(null);
@@ -41,20 +47,64 @@ export function Layout({
 	const searchRef = useRef<HTMLDialogElement | null>(null);
 
   return (
-    <>
-      <CartAside cart={cart} cartRef={cartRef} />
-      <SearchAside searchRef={searchRef} />
-      <MobileMenuAside menu={header?.menu} shop={header?.shop} menuRef={menuRef} />
-      {header && <Header header={header} menuRef={menuRef} cartRef={cartRef} cart={cart} searchRef={searchRef} isLoggedIn={isLoggedIn} />}
-      <main>{children}</main>
-      <Suspense>
-        <Await resolve={footer}>
-          {(footer) => <Footer menu={footer?.menu} shop={header?.shop} />}
-        </Await>
-      </Suspense>
-    </>
+    <div className="dbrp">
+		<div className="dbrp-start">
+			<main className="dbrp-main color-scheme color-scheme-light">
+				<article className="has-root-padding">
+					{children}
+				</article>
+			</main>
+			{header && <Header header={header} menuRef={menuRef} cartRef={cartRef} cart={cart} searchRef={searchRef} isLoggedIn={isLoggedIn} />}
+		</div>
+		<div className="dbrp-end color-scheme color-scheme-dark">
+			<RecommendedProducts products={products} />
+			<Suspense>
+				<Await resolve={footer}>
+					{(footer) => <Footer menu={footer?.menu} shop={header?.shop} />}
+				</Await>
+			</Suspense>
+		</div>
+		<CartAside cart={cart} cartRef={cartRef} />
+		<SearchAside searchRef={searchRef} />
+		<MobileMenuAside menu={header?.menu} shop={header?.shop} menuRef={menuRef} />
+    </div>
   );
 }
+
+function RecommendedProducts({
+	products,
+  }: {
+	products: Promise<RecommendedProductsQuery>;
+  }) {
+	return (
+	  <div className="recommended-products">
+		<Suspense fallback={<div>Loading...</div>}>
+		  <Await resolve={products}>
+			{({products}) => (
+			  <div className="recommended-products-grid">
+				{products.nodes.map((product) => (
+				  <Link
+					key={product.id}
+					className="recommended-product"
+					to={`/products/${product.handle}`}
+				  >
+					<Image
+					  data={product.images.nodes[0]}
+					  sizes="(min-width: 45em) 20vw, 50vw"
+					/>
+					<h4>{product.title}</h4>
+					<small>
+					  <Money data={product.priceRange.minVariantPrice} />
+					</small>
+				  </Link>
+				))}
+			  </div>
+			)}
+		  </Await>
+		</Suspense>
+	  </div>
+	);
+  }
 
 function CartAside({cart, cartRef}: {cart: LayoutProps['cart'], cartRef: React.MutableRefObject<HTMLDialogElement|null>}) {
   return (

@@ -4,10 +4,10 @@ import {useRootLoaderData} from '~/lib/root-data';
 
 export function Footer({
   menu,
-  shop,
+  shop
 }: FooterQuery & {shop: HeaderQuery['shop']}) {
   return (
-    <footer className="footer">
+    <footer className="dbrp-footer">
       {menu && shop?.primaryDomain?.url && (
         <FooterMenu menu={menu} primaryDomainUrl={shop.primaryDomain.url} />
       )}
@@ -45,7 +45,6 @@ function FooterMenu({
             end
             key={item.id}
             prefetch="intent"
-            style={activeLinkStyle}
             to={url}
           >
             {item.title}
@@ -97,16 +96,3 @@ const FALLBACK_FOOTER_MENU = {
     },
   ],
 };
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'white',
-  };
-}

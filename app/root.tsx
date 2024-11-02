@@ -14,7 +14,13 @@ import {
 import favicon from './assets/favicon.svg';
 import resetStyles from './styles/reset.css?url';
 import appStyles from './styles/app.css?url';
+import dbrpStyles from './styles/dbrp.css?url';
 import {Layout} from '~/components/Layout';
+
+import type {
+	// FeaturedCollectionFragment,
+	RecommendedProductsQuery,
+  } from 'storefrontapi.generated';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -40,7 +46,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 export function links() {
   return [
     {rel: 'stylesheet', href: resetStyles},
-    {rel: 'stylesheet', href: appStyles},
+    {rel: 'stylesheet', href: dbrpStyles},
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',
@@ -76,6 +82,8 @@ export async function loader({context}: LoaderFunctionArgs) {
     },
   });
 
+  const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
+
   return defer(
     {
       cart: cartPromise,
@@ -83,6 +91,7 @@ export async function loader({context}: LoaderFunctionArgs) {
       header: await headerPromise,
       isLoggedIn: isLoggedInPromise,
       publicStoreDomain,
+	  products: recommendedProducts
     },
     {
       headers: {
@@ -91,6 +100,37 @@ export async function loader({context}: LoaderFunctionArgs) {
     },
   );
 }
+
+const RECOMMENDED_PRODUCTS_QUERY = `#graphql
+  fragment RecommendedProduct on Product {
+    id
+    title
+    handle
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    images(first: 1) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
+  }
+  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+      nodes {
+        ...RecommendedProduct
+      }
+    }
+  }
+` as const;
 
 export default function App() {
   const nonce = useNonce();

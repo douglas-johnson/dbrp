@@ -1,14 +1,39 @@
-*, *::before, *::after {
-	box-sizing: inherit;
+@layer reset {
+	*, *::before, *::after {
+		box-sizing: inherit;
+	}
+	
+	html {
+		box-sizing: border-box;
+	}
+	
+	:where(*) {
+		margin: 0;
+	}
+	
+	:where(img, svg) {
+		vertical-align: middle;
+		/* Shopify uses width and I can't turn it off */
+		height: auto;
+	}
+	
+	figure :where(img, video, iframe) {
+		max-inline-size: 100%;
+		block-size: auto;
+	}
+	
+	button, input, textarea, select {
+		font: inherit;
+		color: inherit;
+	}
+	
 }
 
-:where(*) {
-	margin: 0;
-}
+/* 
 
-html {
-	box-sizing: border-box;
-}
+
+
+
 
 body {
   font-family: Helvetica, 'Helvetica Neue', sans-serif;
@@ -32,7 +57,7 @@ a:hover {
 
 :where(h4,h5,h6) {
 	line-height: 1.25;
-}
+} */
 
 /*
 
@@ -83,9 +108,9 @@ input {
 
 */
 
-input, select, textarea, button {
+/* input, select, textarea, button {
 	font: inherit;
-}
+} */
 
 /*
 

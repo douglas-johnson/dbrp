@@ -17,7 +17,7 @@ function cleanEpisodeSummaryHTML( html: string ): string {
 export default function Episode( { episode }: { episode: EpisodeType } ) {
 	return (
 		<article className="rhythm">
-			<h2>{episode.title}</h2>
+			<h3>{episode.title}</h3>
 			{episode.imageFile ? (
 				<figure>
 					<Imgix
