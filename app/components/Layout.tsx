@@ -50,7 +50,7 @@ export function Layout({
     <div className="dbrp">
 		<div className="dbrp-start">
 			<main className="dbrp-main color-scheme color-scheme-light">
-				<article className="has-root-padding">
+				<article className="has-root-padding rhythm">
 					{children}
 				</article>
 			</main>
