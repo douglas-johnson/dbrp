@@ -104,6 +104,7 @@ export function HeaderMenu({
 
   return (
     <nav className={className} role="navigation">
+		<menu>
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
 
@@ -115,18 +116,21 @@ export function HeaderMenu({
             ? new URL(item.url).pathname
             : item.url;
         return (
-          <NavLink
-            className="header-menu-item"
-            end
-            key={item.id}
-            prefetch="intent"
-            to={url}
-			onClick={() => menuRef.current?.close()}
-          >
-            {item.title}
+          <li>
+			<NavLink
+				className="header-menu-item"
+				end
+				key={item.id}
+				prefetch="intent"
+				to={url}
+				onClick={() => menuRef.current?.close()}
+			>
+				{item.title}
           </NavLink>
+		  </li>
         );
       })}
+	  </menu>
     </nav>
   );
 }
