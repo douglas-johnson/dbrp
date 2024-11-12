@@ -110,7 +110,7 @@ export default function Homepage() {
 			<Await resolve={data.article}>
 				{
 					(article) => (
-						<Link to={`/blogs/${article.blog.handle}/${article.handle}`}>{article.title}</Link>
+						<p><Link to={`/blogs/${article.blog.handle}/${article.handle}`}>{article.title}</Link></p>
 					)
 				}
 			</Await>
