@@ -19,10 +19,75 @@ export async function loader({context}: LoaderFunctionArgs) {
 	const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
 	const featuredCollection = collections.nodes[0];
 
+	const {blog} = await storefront.query(BLOGS_QUERY, {
+		variables: {
+			blogHandle: 'news',
+			first: 1
+		},
+	});
+
 	const episodes = loadEpisodes( context, 1 );
 
-	return defer({featuredCollection, episodes});
+	return defer({featuredCollection, episodes, article: blog.articles.nodes[0]});
 }
+
+// NOTE: https://shopify.dev/docs/api/storefront/latest/objects/blog
+const BLOGS_QUERY = `#graphql
+  query Blog(
+    $language: LanguageCode
+    $blogHandle: String!
+    $first: Int
+    $last: Int
+    $startCursor: String
+    $endCursor: String
+  ) @inContext(language: $language) {
+    blog(handle: $blogHandle) {
+      title
+      seo {
+        title
+        description
+      }
+      articles(
+        first: $first,
+        last: $last,
+        before: $startCursor,
+        after: $endCursor
+      ) {
+        nodes {
+          ...ArticleItem
+        }
+        pageInfo {
+          hasPreviousPage
+          hasNextPage
+          hasNextPage
+          endCursor
+          startCursor
+        }
+
+      }
+    }
+  }
+  fragment ArticleItem on Article {
+    author: authorV2 {
+      name
+    }
+    contentHtml
+    handle
+    id
+    image {
+      id
+      altText
+      url
+      width
+      height
+    }
+    publishedAt
+    title
+    blog {
+      handle
+    }
+  }
+` as const;
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
@@ -41,6 +106,15 @@ export default function Homepage() {
 			</Await>
 		</Suspense>
 		<h3>Blog Post</h3>
+		<Suspense fallback={<div>Loading latest blog post</div>}>
+			<Await resolve={data.article}>
+				{
+					(article) => (
+						<Link to={`/blogs/${article.blog.handle}/${article.handle}`}>{article.title}</Link>
+					)
+				}
+			</Await>
+		</Suspense>
 		<h3>Patreon Post</h3>
 		<p><a href="https://www.patreon.com/dadbodrappod">Join to read</a></p>
     </>
