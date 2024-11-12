@@ -83,20 +83,17 @@ function RecommendedProducts({
 			{({products}) => (
 			  <div className="recommended-products-grid">
 				{products.nodes.map((product) => (
-				  <Link
-					key={product.id}
-					className="recommended-product"
-					to={`/products/${product.handle}`}
-				  >
-					<Image
-					  data={product.images.nodes[0]}
-					  sizes="(min-width: 45em) 20vw, 50vw"
-					/>
-					<h4>{product.title}</h4>
-					<small>
-					  <Money data={product.priceRange.minVariantPrice} />
-					</small>
-				  </Link>
+					<article className="recommended-product" key={product.id}>
+						<div className="recommended-product-start">
+							<Link to={`/products/${product.handle}`}>
+								<Image data={product.images.nodes[0]} sizes="(min-width: 45em) 20vw, 50vw" />
+							</Link>
+						</div>
+						<div className="recommended-product-end">
+							<h4><Link to={`/products/${product.handle}`}>{product.title}</Link></h4>
+							<small><Money data={product.priceRange.minVariantPrice} /></small>
+						</div>
+					</article>
 				))}
 			  </div>
 			)}
