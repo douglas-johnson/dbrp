@@ -18,10 +18,10 @@ export async function loader({context}: LoaderFunctionArgs) {
 	const {storefront} = context;
 	const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
 	const featuredCollection = collections.nodes[0];
-	
+
 	const episodes = loadEpisodes( context, 1 );
 
-  return defer({featuredCollection, episodes});
+	return defer({featuredCollection, episodes});
 }
 
 export default function Homepage() {
@@ -30,12 +30,19 @@ export default function Homepage() {
     <>
 		{/* <FeaturedCollection collection={data.featuredCollection} /> */}
 		{/* <RecommendedProducts products={data.recommendedProducts} /> */}
-		<h2>Latest Episode</h2>
+		<h2>Patreon</h2>
+		<p><a href="https://www.patreon.com/dadbodrappod">Join The Patreon</a></p>
+		<h2>Spotify</h2>
+		<p><a href="https://open.spotify.com/show/6jSzuDY9ex0aNKBUENWUfE">Listen on Spotify</a></p>
+		<h2>Latest</h2>
 		<Suspense fallback={<div>Loading latest episode</div>}>
 			<Await resolve={data.episodes}>
 				{(episodes) => ( <Episode episode={episodes[0]} />)}
 			</Await>
 		</Suspense>
+		<h3>Blog Post</h3>
+		<h3>Patreon Post</h3>
+		<p><a href="https://www.patreon.com/dadbodrappod">Join to read</a></p>
     </>
   );
 }
