@@ -35,7 +35,7 @@
 	.dbrp {
 		display: flex;
 		flex-wrap: wrap;
-		min-block-size: 100dvh;
+		min-block-size: 100lvh;
 	}
 
 	.dbrp-start {
@@ -63,7 +63,7 @@
 	.dbrp-main {
 		flex-basis: 50em;
 		flex-grow: 5;
-		min-block-size: 100dvh;
+		min-block-size: 100lvh;
 	}
 
 	/**
@@ -79,7 +79,7 @@
 	.dbrp-nav {
 		position: sticky;
 		top: 0;
-		block-size: 100lvh;
+		block-size: 100svh;
 		display: flex;
 		flex-direction: column;
 
