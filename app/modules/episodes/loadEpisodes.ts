@@ -9,20 +9,27 @@ export default async function loadEpisodes( context: AppLoadContext, limit: numb
 
 	const cacheKey = [url];
 
-	return await withCache(cacheKey, storefront.CacheLong(), async () => {
-		const response = await fetch(url);
-		if (!response.ok) {
-			return [];
+	const { data, response } = await withCache.fetch(
+		url,
+		{},
+		{
+			cacheKey,
+      		cacheStrategy: storefront.CacheLong(),
+      		shouldCacheResponse: () => true, 
 		}
+	)
 
-		const episodes = await response.json<Episode[]>();
-		const nextPage = getNextPageFromContentRange( response.headers.get('content-range') );
-
+	if (!response.ok) {
 		return {
-			nextPage,
-			episodes
-		}
-	});
+			nextPage: 0,
+			episodes: []
+		};
+	}
+
+	return {
+		nextPage: getNextPageFromContentRange( response.headers.get('content-range') ),
+		episodes: data
+	}
 }
 
 function getUrl( base: string, limit: number, page: number ) : string {
