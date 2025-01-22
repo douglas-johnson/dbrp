@@ -26,9 +26,9 @@ export async function loader({context}: LoaderFunctionArgs) {
 		},
 	});
 
-	const episodes = loadEpisodes( context, 1 );
+	const episodeData = loadEpisodes( context, 1 );
 
-	return defer({featuredCollection, episodes, article: blog.articles.nodes[0]});
+	return defer({featuredCollection, episodeData, article: blog.articles.nodes[0]});
 }
 
 // NOTE: https://shopify.dev/docs/api/storefront/latest/objects/blog
@@ -101,8 +101,13 @@ export default function Homepage() {
 		<p><a href="https://open.spotify.com/show/6jSzuDY9ex0aNKBUENWUfE">Listen on Spotify</a></p>
 		<h2>Latest</h2>
 		<Suspense fallback={<div>Loading latest episode</div>}>
-			<Await resolve={data.episodes}>
-				{(episodes) => ( <Episode episode={episodes[0]} />)}
+			<Await resolve={data.episodeData}>
+				{({episodes}) => (
+					<>
+						<Episode episode={episodes[0]} />
+						<p><Link to={'/podcast/'}>More Episodes</Link></p>
+					</>
+				)}
 			</Await>
 		</Suspense>
 		<h3>Blog Post</h3>
