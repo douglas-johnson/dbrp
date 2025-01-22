@@ -1,1 +1,0 @@
-export const MEGAPHONE_API_EPISODES_URL: string = 'https://cms.megaphone.fm/api/networks/e9377628-5863-11ec-9c52-1fcb48d39b06/podcasts/faf889fe-5e84-11ea-9926-cbaa5546c1d7/episodes';

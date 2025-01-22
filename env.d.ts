@@ -35,7 +35,7 @@ declare global {
     PUBLIC_STOREFRONT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_URL: string;
-	'megaphone-api-token': string;
+	DBRP_API_URL_BASE: string;
 	SHOP_ID: string;
   }
 
