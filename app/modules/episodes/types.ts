@@ -6,4 +6,5 @@ export interface Episode {
 	summary: string;
 	imageFile?: string;
 	pubdate: string;
+	spotifyIdentifier: string;
 }

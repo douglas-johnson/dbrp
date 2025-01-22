@@ -2,6 +2,7 @@ import { type Episode as EpisodeType } from "~/modules/episodes/types"
 import Imgix from "./Imgix"
 import sanitizeHtml from 'sanitize-html';
 import anchorme from "anchorme";
+import { Link } from "@remix-run/react";
 
 function cleanEpisodeSummaryHTML( html: string ): string {
 	return [
@@ -34,6 +35,7 @@ export default function Episode( { episode }: { episode: EpisodeType } ) {
 				</figure>
 			) : null}
 			<p>{episode.subtitle}</p>
+			<p><Link to={`https://open.spotify.com/episode/${episode.spotifyIdentifier}`}>Listen on Spotify</Link></p>
 			<div className="rhythm" dangerouslySetInnerHTML={{__html: cleanEpisodeSummaryHTML( episode.summary )}}></div>
 		</article>
 	);
