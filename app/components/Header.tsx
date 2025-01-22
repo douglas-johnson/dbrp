@@ -116,11 +116,10 @@ export function HeaderMenu({
             ? new URL(item.url).pathname
             : item.url;
         return (
-          <li>
+          <li key={item.id}>
 			<NavLink
 				className="header-menu-item"
 				end
-				key={item.id}
 				prefetch="intent"
 				to={url}
 				onClick={() => menuRef.current?.close()}
