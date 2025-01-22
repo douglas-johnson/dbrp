@@ -5,7 +5,7 @@ export default async function loadEpisodes( context: AppLoadContext, limit: numb
 
 	const {storefront, withCache, env} = context;
 
-	const url = getUrl( env['DBRP_API_URL_BASE'],  limit, page );
+	const url = getUrl( env['DBRP_API_URL_BASE'], limit, page );
 
 	const cacheKey = [url];
 
