@@ -56,7 +56,7 @@ export default {
       });
 
 	  // Create withCache object
-	  const withCache = createWithCache({cache, waitUntil});
+	  const withCache = createWithCache({cache, waitUntil, request});
 
       /**
        * Create a client for Customer Account API.
