@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import {Suspense, useEffect} from 'react';
 import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Await,
@@ -25,6 +25,7 @@ import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import {getVariantUrl} from '~/lib/variants';
+import { ErrorBoundary } from '~/root';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Dad Bod Rap Pod | ${data?.product.title ?? ''}`}];
@@ -105,11 +106,11 @@ export default function Product() {
   const {selectedVariant} = product;
   return (
     <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <ProductMain
-        selectedVariant={selectedVariant}
-        product={product}
-        variants={variants}
+		<ProductImage image={selectedVariant?.image} />
+		<ProductMain
+			selectedVariant={selectedVariant}
+			product={product}
+			variants={variants}
       />
     </div>
   );
@@ -227,8 +228,9 @@ function ProductForm({
       <br />
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
-        onClick={() => {
-          window.location.href = window.location.href + '#cart-aside';
+        selectedVariant={selectedVariant}
+		onClick={() => {
+        //   window.location.href = window.location.href + '#cart-aside';
         }}
         lines={
           selectedVariant
@@ -282,16 +284,21 @@ function AddToCartButton({
   disabled,
   lines,
   onClick,
+  selectedVariant
 }: {
   analytics?: unknown;
   children: React.ReactNode;
   disabled?: boolean;
   lines: CartLineInput[];
   onClick?: () => void;
+  selectedVariant: ProductFragment['selectedVariant'];
 }) {
+
+	const simpleVariantId = (selectedVariant?.id ?? '' ).split('/').pop();
+
   return (
     <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
-      {(fetcher: FetcherWithComponents<any>) => (
+	  {(fetcher: FetcherWithComponents<any>) => (
         <>
           <input
             name="analytics"
@@ -299,14 +306,17 @@ function AddToCartButton({
             value={JSON.stringify(analytics)}
           />
           <button
+		  	id="add-to-cart"
             type="submit"
-            onClick={onClick}
             disabled={disabled ?? fetcher.state !== 'idle'}
+			data-native-pre-order-btn
+			data-starting-variant={simpleVariantId}
+			data-domain="d5f805-67.myshopify.com"
           >
             {children}
           </button>
         </>
-      )}
+     )}
     </CartForm>
   );
 }

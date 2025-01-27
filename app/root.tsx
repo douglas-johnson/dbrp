@@ -1,4 +1,4 @@
-import {useNonce} from '@shopify/hydrogen';
+import {useNonce, Script} from '@shopify/hydrogen';
 import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Links,
@@ -9,6 +9,7 @@ import {
   useLoaderData,
   ScrollRestoration,
   isRouteErrorResponse,
+  useLocation,
   type ShouldRevalidateFunction,
 } from '@remix-run/react';
 import favicon from './assets/favicon.svg';
@@ -16,6 +17,7 @@ import resetStyles from './styles/reset.css?url';
 import appStyles from './styles/app.css?url';
 import dbrpStyles from './styles/dbrp.css?url';
 import {Layout} from '~/components/Layout';
+import {useEffect} from 'react';
 
 import type {
 	// FeaturedCollectionFragment,
@@ -136,6 +138,14 @@ export default function App() {
   const nonce = useNonce();
   const data = useLoaderData<typeof loader>();
 
+  const location = useLocation();
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.PPretry) {
+      window.PPretry();
+    }
+  }, [location]);
+
+
   return (
     <html lang="en">
       <head>
@@ -143,6 +153,7 @@ export default function App() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
+		
       </head>
       <body>
         <Layout {...data}>
@@ -150,6 +161,7 @@ export default function App() {
         </Layout>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
+		<Script waitForHydration type="text/javascript" async src="https://api.preproduct.io/preproduct-embed.js"></Script>
       </body>
     </html>
   );

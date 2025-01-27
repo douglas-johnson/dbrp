@@ -13,7 +13,35 @@ export default async function handleRequest(
   const {nonce, header, NonceProvider} = createContentSecurityPolicy(
 	{
 		// allow images served by megaphone via imgix.
-		imgSrc: "'self' megaphone.imgix.net cdn.shopify.com"
+		imgSrc: [
+			"'self'",
+			'megaphone.imgix.net',
+			'cdn.shopify.com',
+			'data:'
+		],
+
+		scriptSrc: [
+			"'self'",
+			"https://cdn.shopify.com",
+			"https://shopify.com",
+			"http://localhost:*",
+			"https://api.preproduct.io",
+		],
+		connectSrc: [
+			"'self'",
+			"https://monorail-edge.shopifysvc.com",
+			"http://localhost:*",
+			"ws://localhost:*",
+			"ws://127.0.0.1:*",
+			"ws://*.tryhydrogen.dev:*",
+			"https://api.preproduct.io",
+			"https://d5f805-67.myshopify.com"
+		],
+		scriptSrcAttr: [
+			"'unsafe-inline'"
+		]
+
+
 	}
   );
 
