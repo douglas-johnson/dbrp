@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import {Suspense, useContext} from 'react';
 import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Await,
@@ -25,6 +25,8 @@ import type {
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import {getVariantUrl} from '~/lib/variants';
+
+import NavContext from '~/modules/nav-context';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Dad Bod Rap Pod | ${data?.product.title ?? ''}`}];
@@ -215,6 +217,9 @@ function ProductForm({
   selectedVariant: ProductFragment['selectedVariant'];
   variants: Array<ProductVariantFragment>;
 }) {
+
+	const useableNavContext = useContext( NavContext );
+
   return (
     <div className="product-form">
       <VariantSelector
@@ -228,7 +233,7 @@ function ProductForm({
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
-          window.location.href = window.location.href + '#cart-aside';
+			useableNavContext?.cart?.current?.showModal()
         }}
         lines={
           selectedVariant
