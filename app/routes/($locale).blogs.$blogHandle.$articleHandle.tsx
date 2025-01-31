@@ -41,7 +41,6 @@ export default function Article() {
       <h1>
         {title}
       </h1>
-	  <p>{publishedDate} &middot; {author?.name}</p>
 
       {image && <Image data={image} sizes="90vw" loading="eager" />}
       <div
