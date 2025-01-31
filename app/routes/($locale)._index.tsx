@@ -95,11 +95,23 @@ export default function Homepage() {
     <>
 		{/* <FeaturedCollection collection={data.featuredCollection} /> */}
 		{/* <RecommendedProducts products={data.recommendedProducts} /> */}
-		<h2>Patreon</h2>
-		<p><a href="https://www.patreon.com/dadbodrappod">Join The Patreon</a></p>
-		<h2>Spotify</h2>
-		<p><a href="https://open.spotify.com/show/6jSzuDY9ex0aNKBUENWUfE">Listen on Spotify</a></p>
-		<h2>Latest</h2>
+		<h1>Dad Bod Rap Pod</h1>
+		<ul>
+			<li><a href="https://www.patreon.com/dadbodrappod">Join The Patreon</a></li>
+			<li><a href="https://open.spotify.com/show/6jSzuDY9ex0aNKBUENWUfE">Listen on Spotify</a></li>
+			<li><a href="https://feeds.megaphone.fm/dadbodrappod">RSS Feed</a></li>
+		</ul>
+		<h2>News</h2>
+		<Suspense fallback={<div>Loading latest blog post</div>}>
+			<Await resolve={data.article}>
+				{
+					(article) => (
+						<p><Link to={`/blogs/${article.blog.handle}/${article.handle}`}>{article.title}</Link></p>
+					)
+				}
+			</Await>
+		</Suspense>
+		<h2>Latest Episode</h2>
 		<Suspense fallback={<div>Loading latest episode</div>}>
 			<Await resolve={data.episodeData}>
 				{({episodes}) => (
@@ -110,18 +122,7 @@ export default function Homepage() {
 				)}
 			</Await>
 		</Suspense>
-		<h3>Blog Post</h3>
-		<Suspense fallback={<div>Loading latest blog post</div>}>
-			<Await resolve={data.article}>
-				{
-					(article) => (
-						<p><Link to={`/blogs/${article.blog.handle}/${article.handle}`}>{article.title}</Link></p>
-					)
-				}
-			</Await>
-		</Suspense>
-		<h3>Patreon Post</h3>
-		<p><a href="https://www.patreon.com/dadbodrappod">Join to read</a></p>
+		
     </>
   );
 }
