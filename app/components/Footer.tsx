@@ -26,6 +26,7 @@ function FooterMenu({
 
   return (
     <nav className="footer-menu" role="navigation">
+		<menu>
       {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
         if (!item.url) return null;
         // if the url is internal, we strip the domain
@@ -37,20 +38,21 @@ function FooterMenu({
             : item.url;
         const isExternal = !url.startsWith('/');
         return isExternal ? (
-          <a href={url} key={item.id} rel="noopener noreferrer" target="_blank">
+          <li key={item.id}><a href={url}  rel="noopener noreferrer" target="_blank">
             {item.title}
-          </a>
+          </a></li>
         ) : (
-          <NavLink
+          <li key={item.id}><NavLink
             end
-            key={item.id}
             prefetch="intent"
             to={url}
           >
             {item.title}
           </NavLink>
+		  </li>
         );
       })}
+	  </menu>
     </nav>
   );
 }
