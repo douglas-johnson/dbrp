@@ -105,9 +105,15 @@ function redirectToFirstVariant({
 export default function Product() {
   const {product, variants} = useLoaderData<typeof loader>();
   const {selectedVariant} = product;
+
   return (
-    <div className="product">
+    <div className="product rhythm">
       <ProductImage image={selectedVariant?.image} />
+		{
+			product.media.edges
+				.filter( ({ node }) => node?.image?.url !== selectedVariant?.image?.url )
+				.map( ({ node }) => <ProductImage image={node.image} />)
+		}
       <ProductMain
         selectedVariant={selectedVariant}
         product={product}
@@ -125,7 +131,7 @@ function ProductImage({image}: {image: ProductVariantFragment['image']}) {
     <div className="product-image">
       <Image
         alt={image.altText || 'Product Image'}
-        aspectRatio="1/1"
+        aspectRatio={`${image.width}/${image.height}}`}
         data={image}
         key={image.id}
         sizes="(min-width: 45em) 50vw, 100vw"
@@ -253,6 +259,11 @@ function ProductForm({
 }
 
 function ProductOptions({option}: {option: VariantOption}) {
+
+	if ( 1 >= option.values.length ) {
+		return null;
+	}
+
   return (
     <div className="product-options" key={option.name}>
       <h5>{option.name}</h5>
@@ -361,6 +372,22 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+	media(first:10) {
+      edges {
+        node {
+          ... on MediaImage {
+            image {
+				__typename
+				id
+              url
+			  altText
+			  width
+			  height
+            }
+          }
+        }
+      }  
+    }
     options {
       name
       values
