@@ -53,11 +53,11 @@ function CartLines({
 
   return (
     <div aria-labelledby="cart-lines">
-      <ul>
+      <menu>
         {lines.nodes.map((line) => (
           <CartLineItem key={line.id} line={line} layout={layout} />
         ))}
-      </ul>
+      </menu>
     </div>
   );
 }
@@ -85,9 +85,11 @@ function CartLineItem({
           width={100}
         />
       )}
-
+   
       <div>
-        <Link
+        
+          <p>
+            <strong><Link
           prefetch="intent"
           to={lineItemUrl}
           onClick={() => {
@@ -96,21 +98,22 @@ function CartLineItem({
               window.location.href = lineItemUrl;
             }
           }}
-        >
-          <p>
-            <strong>{product.title}</strong>
+        >{product.title} </Link></strong>
           </p>
-        </Link>
+       
         <CartLinePrice line={line} as="span" />
-        <ul>
-          {selectedOptions.map((option) => (
-            <li key={option.name}>
-              <small>
-                {option.name}: {option.value}
-              </small>
-            </li>
-          ))}
-        </ul>
+		 { ! onlyOptionIsDefault(selectedOptions) && (
+			<ul>
+				{selectedOptions.map((option) => (
+				<li key={option.name}>
+					<small>
+					{option.name}: {option.value}
+					</small>
+				</li>
+				))}
+			</ul>
+		 ) } 
+        
         <CartLineQuantity line={line} />
       </div>
     </li>
@@ -128,6 +131,21 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl: string}) {
       <br />
     </div>
   );
+}
+
+function onlyOptionIsDefault( selectedOptions: Object[] ): boolean {
+
+	// something wrong here.
+	if ( 0 === selectedOptions.length ) {
+		return false;
+	}
+
+	// more than one option
+	if ( 1 < selectedOptions.length ) {
+		return false;
+	}
+
+	return 'Title' === selectedOptions[0].name && 'Default Title' === selectedOptions[0].value;
 }
 
 export function CartSummary({
@@ -180,7 +198,7 @@ function CartLineQuantity({line}: {line: CartLine}) {
 
   return (
     <div className="cart-line-quantity">
-      <small>Quantity: {quantity} &nbsp;&nbsp;</small>
+      <small>Quantity: {quantity} </small>
       <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
         <button
           aria-label="Decrease quantity"
@@ -191,7 +209,7 @@ function CartLineQuantity({line}: {line: CartLine}) {
           <span>&#8722; </span>
         </button>
       </CartLineUpdateButton>
-      &nbsp;
+     
       <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
         <button
           aria-label="Increase quantity"
@@ -201,7 +219,7 @@ function CartLineQuantity({line}: {line: CartLine}) {
           <span>&#43;</span>
         </button>
       </CartLineUpdateButton>
-      &nbsp;
+      
       <CartLineRemoveButton lineIds={[lineId]} />
     </div>
   );
