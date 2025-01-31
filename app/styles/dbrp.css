@@ -212,6 +212,12 @@
 		}
 	}
 
+	.dbrp-dialog-header {
+		text-align: end;
+	}
+
+	.dbrp-dialog-content {}
+
 	.recommended-products {}
 
 	.recommended-products-grid {
@@ -266,6 +272,10 @@
 		border-color: transparent;
 	}
 
+	button svg {
+		pointer-events: none;
+	}
+
 	/**
 	 * Size
 	 */
@@ -313,4 +323,17 @@
 		margin-block-start: 0.5lh;
 	}
 
+}
+
+.cart-line {
+	display: grid;
+
+	grid-template-columns: 4.5em 1fr;
+	column-gap: 0.5em;
+}
+
+.cart-line-quantity {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }

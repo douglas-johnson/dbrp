@@ -30,7 +30,7 @@ function CartDetails({layout, cart}: CartMainProps) {
   const cartHasItems = !!cart && cart.totalQuantity > 0;
 
   return (
-    <div className="cart-details">
+    <div className="cart-details rhythm">
       <CartLines lines={cart?.lines} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
@@ -76,6 +76,8 @@ function CartLineItem({
   return (
     <li key={id} className="cart-line">
       {image && (
+		<div>
+			<figure>
         <Image
           alt={title}
           aspectRatio="1/1"
@@ -84,10 +86,11 @@ function CartLineItem({
           loading="lazy"
           width={100}
         />
+		</figure>
+		</div>
       )}
    
       <div>
-        
           <p>
             <strong><Link
           prefetch="intent"
@@ -158,7 +161,7 @@ export function CartSummary({
   layout: CartMainProps['layout'];
 }) {
   const className =
-    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside';
+    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside rhythm';
 
   return (
     <div aria-labelledby="cart-summary" className={className}>
