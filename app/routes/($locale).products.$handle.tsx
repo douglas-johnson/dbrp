@@ -183,7 +183,7 @@ function ProductMain({
         <strong>Description</strong>
       </p>
       <br />
-      <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+      <div className="rhythm" dangerouslySetInnerHTML={{__html: descriptionHtml}} />
       <br />
     </div>
   );
