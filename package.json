@@ -18,7 +18,7 @@
     "@remix-run/react": "^2.16.1",
     "@remix-run/server-runtime": "^2.16.1",
     "@shopify/cli": "^3.82.1",
-    "@shopify/cli-hydrogen": "^8.0.4",
+    "@shopify/cli-hydrogen": "^10.1.0",
     "@shopify/hydrogen": "^2025.4.1",
     "@shopify/remix-oxygen": "^2.0.12",
     "anchorme": "^3.0.8",
