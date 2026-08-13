@@ -10,16 +10,14 @@ export default async function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
-  const {nonce, header, NonceProvider} = createContentSecurityPolicy(
-	{
-		// allow images served by megaphone via imgix.
-		imgSrc: "'self' megaphone.imgix.net cdn.shopify.com"
-	}
-  );
+  const {nonce, header, NonceProvider} = createContentSecurityPolicy({
+    // allow images served by megaphone via imgix.
+    imgSrc: "'self' megaphone.imgix.net cdn.shopify.com",
+  });
 
   const body = await renderToReadableStream(
     <NonceProvider>
-      <RemixServer context={remixContext} url={request.url} />
+      <RemixServer nonce={nonce} context={remixContext} url={request.url} />
     </NonceProvider>,
     {
       nonce,
