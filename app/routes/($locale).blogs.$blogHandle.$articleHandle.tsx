@@ -37,16 +37,15 @@ export default function Article() {
   }).format(new Date(article.publishedAt));
 
   return (
-    <div className="article">
+    <div className="article rhythm">
       <h1>
         {title}
       </h1>
-	  <p>{publishedDate} &middot; {author?.name}</p>
 
       {image && <Image data={image} sizes="90vw" loading="eager" />}
       <div
         dangerouslySetInnerHTML={{__html: contentHtml}}
-        className="article"
+        className="article rhythm"
       />
     </div>
   );

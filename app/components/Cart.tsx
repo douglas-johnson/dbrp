@@ -30,7 +30,7 @@ function CartDetails({layout, cart}: CartMainProps) {
   const cartHasItems = !!cart && cart.totalQuantity > 0;
 
   return (
-    <div className="cart-details">
+    <div className="cart-details rhythm">
       <CartLines lines={cart?.lines} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
@@ -53,11 +53,11 @@ function CartLines({
 
   return (
     <div aria-labelledby="cart-lines">
-      <ul>
+      <menu>
         {lines.nodes.map((line) => (
           <CartLineItem key={line.id} line={line} layout={layout} />
         ))}
-      </ul>
+      </menu>
     </div>
   );
 }
@@ -76,6 +76,8 @@ function CartLineItem({
   return (
     <li key={id} className="cart-line">
       {image && (
+		<div>
+			<figure>
         <Image
           alt={title}
           aspectRatio="1/1"
@@ -84,10 +86,13 @@ function CartLineItem({
           loading="lazy"
           width={100}
         />
+		</figure>
+		</div>
       )}
-
+   
       <div>
-        <Link
+          <p>
+            <strong><Link
           prefetch="intent"
           to={lineItemUrl}
           onClick={() => {
@@ -96,21 +101,22 @@ function CartLineItem({
               window.location.href = lineItemUrl;
             }
           }}
-        >
-          <p>
-            <strong>{product.title}</strong>
+        >{product.title} </Link></strong>
           </p>
-        </Link>
+       
         <CartLinePrice line={line} as="span" />
-        <ul>
-          {selectedOptions.map((option) => (
-            <li key={option.name}>
-              <small>
-                {option.name}: {option.value}
-              </small>
-            </li>
-          ))}
-        </ul>
+		 { ! onlyOptionIsDefault(selectedOptions) && (
+			<ul>
+				{selectedOptions.map((option) => (
+				<li key={option.name}>
+					<small>
+					{option.name}: {option.value}
+					</small>
+				</li>
+				))}
+			</ul>
+		 ) } 
+        
         <CartLineQuantity line={line} />
       </div>
     </li>
@@ -130,6 +136,21 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl: string}) {
   );
 }
 
+function onlyOptionIsDefault( selectedOptions: Object[] ): boolean {
+
+	// something wrong here.
+	if ( 0 === selectedOptions.length ) {
+		return false;
+	}
+
+	// more than one option
+	if ( 1 < selectedOptions.length ) {
+		return false;
+	}
+
+	return 'Title' === selectedOptions[0].name && 'Default Title' === selectedOptions[0].value;
+}
+
 export function CartSummary({
   cost,
   layout,
@@ -140,7 +161,7 @@ export function CartSummary({
   layout: CartMainProps['layout'];
 }) {
   const className =
-    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside';
+    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside rhythm';
 
   return (
     <div aria-labelledby="cart-summary" className={className}>
@@ -180,7 +201,7 @@ function CartLineQuantity({line}: {line: CartLine}) {
 
   return (
     <div className="cart-line-quantity">
-      <small>Quantity: {quantity} &nbsp;&nbsp;</small>
+      <small>Quantity: {quantity} </small>
       <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
         <button
           aria-label="Decrease quantity"
@@ -191,7 +212,7 @@ function CartLineQuantity({line}: {line: CartLine}) {
           <span>&#8722; </span>
         </button>
       </CartLineUpdateButton>
-      &nbsp;
+     
       <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
         <button
           aria-label="Increase quantity"
@@ -201,7 +222,7 @@ function CartLineQuantity({line}: {line: CartLine}) {
           <span>&#43;</span>
         </button>
       </CartLineUpdateButton>
-      &nbsp;
+      
       <CartLineRemoveButton lineIds={[lineId]} />
     </div>
   );

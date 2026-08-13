@@ -20,9 +20,10 @@ import type {
 	RecommendedProductsQuery,
   } from 'storefrontapi.generated';
 
-
-import { useRef } from 'react';
+import { useRef, useContext } from 'react';
 import Dialog from '~/components/Dialog';
+
+import NavContext from '~/modules/nav-context';
 
 export type LayoutProps = {
   cart: Promise<CartApiQueryFragment | null>;
@@ -46,7 +47,14 @@ export function Layout({
 	const cartRef = useRef<HTMLDialogElement | null>(null);
 	const searchRef = useRef<HTMLDialogElement | null>(null);
 
+	const navContextValue = {
+		menu: menuRef,
+		cart: cartRef,
+		search: searchRef
+	}
+
   return (
+	<NavContext.Provider value={navContextValue}>
     <div className="dbrp">
 		<div className="dbrp-start">
 			<main className="dbrp-main color-scheme color-scheme-light">
@@ -54,7 +62,7 @@ export function Layout({
 					{children}
 				</article>
 			</main>
-			{header && <Header header={header} menuRef={menuRef} cartRef={cartRef} cart={cart} searchRef={searchRef} isLoggedIn={isLoggedIn} />}
+			{header && <Header header={header} cart={cart} isLoggedIn={isLoggedIn} />}
 		</div>
 		<div className="dbrp-end color-scheme color-scheme-dark">
 			<RecommendedProducts products={products} />
@@ -64,10 +72,11 @@ export function Layout({
 				</Await>
 			</Suspense>
 		</div>
-		<CartAside cart={cart} cartRef={cartRef} />
-		<SearchAside searchRef={searchRef} />
-		<MobileMenuAside menu={header?.menu} shop={header?.shop} menuRef={menuRef} />
+		<CartAside cart={cart} />
+		<SearchAside />
+		<MobileMenuAside menu={header?.menu} shop={header?.shop} />
     </div>
+	</NavContext.Provider>
   );
 }
 
@@ -103,9 +112,12 @@ function RecommendedProducts({
 	);
   }
 
-function CartAside({cart, cartRef}: {cart: LayoutProps['cart'], cartRef: React.MutableRefObject<HTMLDialogElement|null>}) {
-  return (
-    <Dialog ref={cartRef}>
+function CartAside({cart}: {cart: LayoutProps['cart'] }) {
+  
+	const useableNavContext = useContext( NavContext );
+	
+	return (
+    <Dialog ref={useableNavContext?.cart}>
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
           {(cart) => {
@@ -117,9 +129,10 @@ function CartAside({cart, cartRef}: {cart: LayoutProps['cart'], cartRef: React.M
   );
 }
 
-function SearchAside( {searchRef}: {searchRef: React.MutableRefObject<HTMLDialogElement|null>}) {
+function SearchAside() {
+	const useableNavContext = useContext( NavContext );
   return (
-    <Dialog ref={searchRef}>
+    <Dialog ref={useableNavContext?.search}>
       <div className="predictive-search">
         <PredictiveSearchForm>
           {({fetchResults, inputRef}) => (
@@ -153,22 +166,20 @@ function SearchAside( {searchRef}: {searchRef: React.MutableRefObject<HTMLDialog
 
 function MobileMenuAside({
   menu,
-  shop,
-  menuRef
+  shop
 }: {
   menu: HeaderQuery['menu'];
   shop: HeaderQuery['shop'];
-  menuRef: React.MutableRefObject<HTMLDialogElement|null>;
 }) {
+	const useableNavContext = useContext( NavContext );
   return (
     menu &&
     shop?.primaryDomain?.url && (
-      <Dialog ref={menuRef}>
+      <Dialog ref={useableNavContext?.menu}>
         <HeaderMenu
           menu={menu}
           viewport="mobile"
           primaryDomainUrl={shop.primaryDomain.url}
-		  menuRef={menuRef}
         />
       </Dialog>
     )

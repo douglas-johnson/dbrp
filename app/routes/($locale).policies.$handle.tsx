@@ -53,7 +53,7 @@ export default function Policy() {
       </div>
       <br />
       <h1>{policy.title}</h1>
-      <div dangerouslySetInnerHTML={{__html: policy.body}} />
+      <div className="article rhythm" dangerouslySetInnerHTML={{__html: policy.body}} />
     </div>
   );
 }
