@@ -248,6 +248,21 @@
 		flex-grow: 1;
 	}
 
+	/**
+	 * Cart
+	 */
+	.cart-line {
+		display: grid;
+
+		grid-template-columns: 4.5em 1fr;
+		column-gap: 0.5em;
+	}
+
+	.cart-line-quantity {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 }
 
 @layer utilities {
@@ -324,17 +339,4 @@
 		margin-block-start: 0.5lh;
 	}
 
-}
-
-.cart-line {
-	display: grid;
-
-	grid-template-columns: 4.5em 1fr;
-	column-gap: 0.5em;
-}
-
-.cart-line-quantity {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 }
