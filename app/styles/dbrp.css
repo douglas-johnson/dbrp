@@ -251,6 +251,10 @@
 	/**
 	 * Cart
 	 */
+	.cart-line + .cart-line  {
+		margin-block-start: 1lh;
+	}
+	
 	.cart-line {
 		display: grid;
 
