@@ -272,6 +272,13 @@
 		display: grid;
 		grid-template-columns: 1fr min-content;
 	}
+
+	/**
+	 * product-options-grid
+	 */
+	.product-options-grid > * + * {
+		margin-inline-start: 2ch;
+	}
 }
 
 @layer utilities {
