@@ -262,6 +262,15 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		column-gap: 2ch;
+	}
+	.cart-line-quantity > :nth-child( 2 ) {
+		margin-inline-start: auto;
+	}
+
+	.cart-subtotal {
+		display: grid;
+		grid-template-columns: 1fr min-content;
 	}
 }
 
