@@ -1,4 +1,4 @@
-@layer settings, site-layout, elements, components, utilities;
+@layer settings, elements,  site-layout, components, utilities;
 
 @layer settings {
 	:root {
