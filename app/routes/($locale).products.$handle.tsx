@@ -131,7 +131,7 @@ function ProductImage({image}: {image: ProductVariantFragment['image']}) {
     <div className="product-image">
       <Image
         alt={image.altText || 'Product Image'}
-        aspectRatio={`${image.width}/${image.height}}`}
+        aspectRatio={`${image.width}/${image.height}`}
         data={image}
         key={image.id}
         sizes="(min-width: 45em) 50vw, 100vw"
