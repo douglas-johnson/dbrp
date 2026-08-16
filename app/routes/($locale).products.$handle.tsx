@@ -6,10 +6,10 @@ import {
   useLoaderData,
   type MetaFunction,
   type FetcherWithComponents,
+  useNavigate,
 } from '@remix-run/react';
 import type {
   ProductFragment,
-  ProductVariantsQuery,
   ProductVariantFragment,
 } from 'storefrontapi.generated';
 import {
@@ -19,12 +19,24 @@ import {
   type VariantOption,
   getSelectedProductOptions,
   CartForm,
+  useOptimisticVariant,
+  getAdjacentAndFirstAvailableVariants,
+  useSelectedOptionInUrlParam,
+  getProductOptions,
+  MappedProductOptions,
 } from '@shopify/hydrogen';
 import type {
   CartLineInput,
+  Maybe,
+  ProductOptionValueSwatch,
   SelectedOption,
 } from '@shopify/hydrogen/storefront-api-types';
 import {getVariantUrl} from '~/lib/variants';
+import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+
+import {type OptimisticCartLineInput} from '@shopify/hydrogen';
+
+import type {MoneyV2} from '@shopify/hydrogen/storefront-api-types';
 
 import NavContext from '~/modules/nav-context';
 
@@ -32,7 +44,37 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Dad Bod Rap Pod | ${data?.product.title ?? ''}`}];
 };
 
-export async function loader({params, request, context}: LoaderFunctionArgs) {
+export async function loader(args: LoaderFunctionArgs) {
+  // Start fetching non-critical data without blocking time to first byte
+  const deferredData = loadDeferredData(args);
+
+  // Await the critical data required to render initial state of the page
+  const criticalData = await loadCriticalData(args);
+
+  return {...deferredData, ...criticalData};
+}
+
+/**
+ * Load data for rendering content below the fold. This data is deferred and will be
+ * fetched after the initial page load. If it's unavailable, the page should still 200.
+ * Make sure to not throw any errors here, as it will cause the page to 500.
+ */
+function loadDeferredData({context, params}: LoaderFunctionArgs) {
+  // Put any API calls that is not critical to be available on first page render
+  // For example: product reviews, product recommendations, social feeds.
+
+  return {};
+}
+
+/**
+ * Load data necessary for rendering content above the fold. This is the critical data
+ * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
+ */
+async function loadCriticalData({
+  context,
+  params,
+  request,
+}: LoaderFunctionArgs) {
   const {handle} = params;
   const {storefront} = context;
 
@@ -40,71 +82,43 @@ export async function loader({params, request, context}: LoaderFunctionArgs) {
     throw new Error('Expected product handle to be defined');
   }
 
-  // await the query for the critical product data
-  const {product} = await storefront.query(PRODUCT_QUERY, {
-    variables: {handle, selectedOptions: getSelectedProductOptions(request)},
-  });
+  const [{product}] = await Promise.all([
+    storefront.query(PRODUCT_QUERY, {
+      variables: {handle, selectedOptions: getSelectedProductOptions(request)},
+    }),
+    // Add other queries here, so that they are loaded in parallel
+  ]);
 
   if (!product?.id) {
     throw new Response(null, {status: 404});
   }
 
-  const firstVariant = product.variants.nodes[0];
-  const firstVariantIsDefault = Boolean(
-    firstVariant.selectedOptions.find(
-      (option: SelectedOption) =>
-        option.name === 'Title' && option.value === 'Default Title',
-    ),
-  );
+  // The API handle might be localized, so redirect to the localized handle
+  redirectIfHandleIsLocalized(request, {handle, data: product});
 
-  if (firstVariantIsDefault) {
-    product.selectedVariant = firstVariant;
-  } else {
-    // if no selected variant was returned from the selected options,
-    // we redirect to the first variant's url with it's selected options applied
-    if (!product.selectedVariant) {
-      throw redirectToFirstVariant({product, request});
-    }
-  }
-
-  // In order to show which variants are available in the UI, we need to query
-  // all of them. But there might be a *lot*, so instead separate the variants
-  // into it's own separate query that is deferred. So there's a brief moment
-  // where variant options might show as available when they're not, but after
-  // this deffered query resolves, the UI will update.
-  const variants = storefront.query(VARIANTS_QUERY, {
-    variables: {handle},
-  });
-
-  return defer({product, variants});
-}
-
-function redirectToFirstVariant({
-  product,
-  request,
-}: {
-  product: ProductFragment;
-  request: Request;
-}) {
-  const url = new URL(request.url);
-  const firstVariant = product.variants.nodes[0];
-
-  return redirect(
-    getVariantUrl({
-      pathname: url.pathname,
-      handle: product.handle,
-      selectedOptions: firstVariant.selectedOptions,
-      searchParams: new URLSearchParams(url.search),
-    }),
-    {
-      status: 302,
-    },
-  );
+  return {
+    product,
+  };
 }
 
 export default function Product() {
-  const {product, variants} = useLoaderData<typeof loader>();
-  const {selectedVariant} = product;
+  const {product} = useLoaderData<typeof loader>();
+
+  // Optimistically selects a variant with given available variant information
+  const selectedVariant = useOptimisticVariant(
+    product.selectedOrFirstAvailableVariant,
+    getAdjacentAndFirstAvailableVariants(product),
+  );
+
+  // Sets the search param to the selected variant without navigation
+  // only when no search params are set in the url
+  useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
+
+  // Get the product options array
+  const productOptions = getProductOptions({
+    ...product,
+    selectedOrFirstAvailableVariant: selectedVariant,
+  });
 
   return (
     <div className="product rhythm">
@@ -115,9 +129,9 @@ export default function Product() {
           <ProductImage key={node.image?.id || null} image={node.image} />
         ))}
       <ProductMain
-        selectedVariant={selectedVariant}
         product={product}
-        variants={variants}
+        productOptions={productOptions}
+        selectedVariant={selectedVariant}
       />
     </div>
   );
@@ -141,103 +155,124 @@ function ProductImage({image}: {image: ProductVariantFragment['image']}) {
 }
 
 function ProductMain({
-  selectedVariant,
   product,
-  variants,
+  productOptions,
+  selectedVariant,
 }: {
   product: ProductFragment;
-  selectedVariant: ProductFragment['selectedVariant'];
-  variants: Promise<ProductVariantsQuery>;
+  productOptions: MappedProductOptions[];
+  selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
 }) {
   const {title, descriptionHtml} = product;
   return (
     <div className="product-main">
       <h1>{title}</h1>
-      <ProductPrice selectedVariant={selectedVariant} />
-      <br />
-      <Suspense
-        fallback={
-          <ProductForm
-            product={product}
-            selectedVariant={selectedVariant}
-            variants={[]}
-          />
-        }
-      >
-        <Await
-          errorElement="There was a problem loading product variants"
-          resolve={variants}
-        >
-          {(data) => (
-            <ProductForm
-              product={product}
-              selectedVariant={selectedVariant}
-              variants={data.product?.variants.nodes || []}
-            />
-          )}
-        </Await>
-      </Suspense>
-      <br />
-      <br />
+      <ProductPrice
+        price={selectedVariant?.price}
+        compareAtPrice={selectedVariant?.compareAtPrice}
+      />
+      <ProductForm
+        productOptions={productOptions}
+        selectedVariant={selectedVariant}
+      />
       <p>
         <strong>Description</strong>
       </p>
-      <br />
       <div
         className="rhythm"
         dangerouslySetInnerHTML={{__html: descriptionHtml}}
       />
-      <br />
     </div>
   );
 }
 
-function ProductPrice({
-  selectedVariant,
+export function ProductPrice({
+  price,
+  compareAtPrice,
 }: {
-  selectedVariant: ProductFragment['selectedVariant'];
+  price?: MoneyV2;
+  compareAtPrice?: MoneyV2 | null;
 }) {
   return (
     <div className="product-price">
-      {selectedVariant?.compareAtPrice ? (
-        <>
-          <p>Sale</p>
-          <br />
-          <div className="product-price-on-sale">
-            {selectedVariant ? <Money data={selectedVariant.price} /> : null}
-            <s>
-              <Money data={selectedVariant.compareAtPrice} />
-            </s>
-          </div>
-        </>
+      {compareAtPrice ? (
+        <div className="product-price-on-sale">
+          {price ? <Money data={price} /> : null}
+          <s>
+            <Money data={compareAtPrice} />
+          </s>
+        </div>
+      ) : price ? (
+        <Money data={price} />
       ) : (
-        selectedVariant?.price && <Money data={selectedVariant?.price} />
+        <span>&nbsp;</span>
       )}
     </div>
   );
 }
 
 function ProductForm({
-  product,
+  productOptions,
   selectedVariant,
-  variants,
 }: {
-  product: ProductFragment;
-  selectedVariant: ProductFragment['selectedVariant'];
-  variants: Array<ProductVariantFragment>;
+  productOptions: MappedProductOptions[];
+  selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
 }) {
+  const navigate = useNavigate();
   const useableNavContext = useContext(NavContext);
 
   return (
     <div className="product-form">
-      <VariantSelector
-        handle={product.handle}
-        options={product.options}
-        variants={variants}
-      >
-        {({option}) => <ProductOptions key={option.name} option={option} />}
-      </VariantSelector>
-      <br />
+      {productOptions.map((option) => {
+        // If there is only a single value in the option values, don't display the option
+        if (option.optionValues.length === 1) return null;
+        return (
+          <div className="product-options" key={option.name}>
+            <h5>{option.name}</h5>
+            <div className="product-options-grid">
+              {option.optionValues.map((value) => {
+                const {
+                  name,
+                  variantUriQuery,
+                  selected,
+                  available,
+                  exists,
+                  swatch,
+                  // handle,
+                  // isDifferentProduct,
+                } = value;
+
+                return (
+                  <button
+                    type="button"
+                    className={`product-options-item${
+                      exists && !selected ? ' link' : ''
+                    }`}
+                    key={option.name + name}
+                    style={{
+                      border: selected
+                        ? '1px solid black'
+                        : '1px solid transparent',
+                      opacity: available ? 1 : 0.3,
+                    }}
+                    disabled={!exists}
+                    onClick={() => {
+                      if (!selected) {
+                        navigate(`?${variantUriQuery}`, {
+                          replace: true,
+                          preventScrollReset: true,
+                        });
+                      }
+                    }}
+                  >
+                    <ProductOptionSwatch swatch={swatch} name={name} />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
@@ -249,6 +284,7 @@ function ProductForm({
                 {
                   merchandiseId: selectedVariant.id,
                   quantity: 1,
+                  selectedVariant,
                 },
               ]
             : []
@@ -260,40 +296,32 @@ function ProductForm({
   );
 }
 
-function ProductOptions({option}: {option: VariantOption}) {
-  if (1 >= option.values.length) {
-    return null;
-  }
+function ProductOptionSwatch({
+  swatch,
+  name,
+}: {
+  swatch?: Maybe<ProductOptionValueSwatch> | undefined;
+  name: string;
+}) {
+  const image = swatch?.image?.previewImage?.url;
+  const color = swatch?.color;
+
+  if (!image && !color) return name;
 
   return (
-    <div className="product-options" key={option.name}>
-      <h5>{option.name}</h5>
-      <div className="product-options-grid">
-        {option.values.map(({value, isAvailable, isActive, to}) => {
-          return (
-            <Link
-              className="product-options-item"
-              key={option.name + value}
-              prefetch="intent"
-              preventScrollReset
-              replace
-              to={to}
-              style={{
-                border: isActive ? '1px solid black' : '1px solid transparent',
-                opacity: isAvailable ? 1 : 0.3,
-              }}
-            >
-              {value}
-            </Link>
-          );
-        })}
-      </div>
-      <br />
+    <div
+      aria-label={name}
+      className="product-option-label-swatch"
+      style={{
+        backgroundColor: color || 'transparent',
+      }}
+    >
+      {!!image && <img src={image} alt={name} />}
     </div>
   );
 }
 
-function AddToCartButton({
+export function AddToCartButton({
   analytics,
   children,
   disabled,
@@ -303,7 +331,7 @@ function AddToCartButton({
   analytics?: unknown;
   children: React.ReactNode;
   disabled?: boolean;
-  lines: CartLineInput[];
+  lines: Array<OptimisticCartLineInput>;
   onClick?: () => void;
 }) {
   return (
@@ -344,6 +372,7 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
       width
       height
     }
+
     price {
       amount
       currencyCode
@@ -373,37 +402,50 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+    encodedVariantExistence
+    encodedVariantAvailability
+    options {
+      name
+      optionValues {
+        name
+        firstSelectableVariant {
+          ...ProductVariant
+        }
+        swatch {
+          color
+          image {
+            previewImage {
+              url
+            }
+          }
+        }
+      }
+    }
+    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+      ...ProductVariant
+    }
+    adjacentVariants (selectedOptions: $selectedOptions) {
+      ...ProductVariant
+    }
+    seo {
+      description
+      title
+    }
 	media(first:10) {
       edges {
         node {
           ... on MediaImage {
             image {
-				__typename
-				id
+        __typename
+        id
               url
-			  altText
-			  width
-			  height
+        altText
+        width
+        height
             }
           }
         }
       }  
-    }
-    options {
-      name
-      values
-    }
-    selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
-      ...ProductVariant
-    }
-    variants(first: 1) {
-      nodes {
-        ...ProductVariant
-      }
-    }
-    seo {
-      description
-      title
     }
   }
   ${PRODUCT_VARIANT_FRAGMENT}
@@ -421,28 +463,4 @@ const PRODUCT_QUERY = `#graphql
     }
   }
   ${PRODUCT_FRAGMENT}
-` as const;
-
-const PRODUCT_VARIANTS_FRAGMENT = `#graphql
-  fragment ProductVariants on Product {
-    variants(first: 250) {
-      nodes {
-        ...ProductVariant
-      }
-    }
-  }
-  ${PRODUCT_VARIANT_FRAGMENT}
-` as const;
-
-const VARIANTS_QUERY = `#graphql
-  ${PRODUCT_VARIANTS_FRAGMENT}
-  query ProductVariants(
-    $country: CountryCode
-    $language: LanguageCode
-    $handle: String!
-  ) @inContext(country: $country, language: $language) {
-    product(handle: $handle) {
-      ...ProductVariants
-    }
-  }
 ` as const;
