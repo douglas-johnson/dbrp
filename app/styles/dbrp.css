@@ -1,4 +1,4 @@
-@layer settings, site-layout, elements, components, utilities;
+@layer settings, elements,  site-layout, components, utilities;
 
 @layer settings {
 	:root {
@@ -104,6 +104,7 @@
 		container-type: inline-size;
 		align-self: center;
 		text-align: center;
+		inline-size: 100%;
 	}
 
 	.dbrp-logo {
@@ -247,6 +248,41 @@
 		flex-grow: 1;
 	}
 
+	/**
+	 * Cart
+	 */
+	.cart-line + .cart-line  {
+		margin-block-start: 1lh;
+	}
+	
+	.cart-line {
+		display: grid;
+
+		grid-template-columns: 4.5em 1fr;
+		column-gap: 0.5em;
+	}
+
+	.cart-line-quantity {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		column-gap: 2ch;
+	}
+	.cart-line-quantity > :nth-child( 2 ) {
+		margin-inline-start: auto;
+	}
+
+	.cart-subtotal {
+		display: grid;
+		grid-template-columns: 1fr min-content;
+	}
+
+	/**
+	 * product-options-grid
+	 */
+	.product-options-grid > * + * {
+		margin-inline-start: 2ch;
+	}
 }
 
 @layer utilities {
@@ -323,17 +359,4 @@
 		margin-block-start: 0.5lh;
 	}
 
-}
-
-.cart-line {
-	display: grid;
-
-	grid-template-columns: 4.5em 1fr;
-	column-gap: 0.5em;
-}
-
-.cart-line-quantity {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 }

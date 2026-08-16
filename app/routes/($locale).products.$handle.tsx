@@ -109,11 +109,11 @@ export default function Product() {
   return (
     <div className="product rhythm">
       <ProductImage image={selectedVariant?.image} />
-		{
-			product.media.edges
-				.filter( ({ node }) => node?.image?.url !== selectedVariant?.image?.url )
-				.map( ({ node }) => <ProductImage image={node.image} />)
-		}
+      {product.media.edges
+        .filter(({node}) => node?.image?.url !== selectedVariant?.image?.url)
+        .map(({node}) => (
+          <ProductImage key={node.image?.id || null} image={node.image} />
+        ))}
       <ProductMain
         selectedVariant={selectedVariant}
         product={product}
@@ -131,7 +131,7 @@ function ProductImage({image}: {image: ProductVariantFragment['image']}) {
     <div className="product-image">
       <Image
         alt={image.altText || 'Product Image'}
-        aspectRatio={`${image.width}/${image.height}}`}
+        aspectRatio={`${image.width}/${image.height}`}
         data={image}
         key={image.id}
         sizes="(min-width: 45em) 50vw, 100vw"
@@ -183,7 +183,10 @@ function ProductMain({
         <strong>Description</strong>
       </p>
       <br />
-      <div className="rhythm" dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+      <div
+        className="rhythm"
+        dangerouslySetInnerHTML={{__html: descriptionHtml}}
+      />
       <br />
     </div>
   );
@@ -223,8 +226,7 @@ function ProductForm({
   selectedVariant: ProductFragment['selectedVariant'];
   variants: Array<ProductVariantFragment>;
 }) {
-
-	const useableNavContext = useContext( NavContext );
+  const useableNavContext = useContext(NavContext);
 
   return (
     <div className="product-form">
@@ -239,7 +241,7 @@ function ProductForm({
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
-			useableNavContext?.cart?.current?.showModal()
+          useableNavContext?.cart?.current?.showModal();
         }}
         lines={
           selectedVariant
@@ -259,10 +261,9 @@ function ProductForm({
 }
 
 function ProductOptions({option}: {option: VariantOption}) {
-
-	if ( 1 >= option.values.length ) {
-		return null;
-	}
+  if (1 >= option.values.length) {
+    return null;
+  }
 
   return (
     <div className="product-options" key={option.name}>
