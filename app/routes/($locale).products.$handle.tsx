@@ -238,8 +238,6 @@ function ProductForm({
                   available,
                   exists,
                   swatch,
-                  // handle,
-                  // isDifferentProduct,
                 } = value;
 
                 return (
