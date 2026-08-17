@@ -1,8 +1,6 @@
-import {Suspense, useContext} from 'react';
-import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {useContext} from 'react';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
-  Await,
-  Link,
   useLoaderData,
   type MetaFunction,
   type FetcherWithComponents,
@@ -15,8 +13,6 @@ import type {
 import {
   Image,
   Money,
-  VariantSelector,
-  type VariantOption,
   getSelectedProductOptions,
   CartForm,
   useOptimisticVariant,
@@ -24,20 +20,15 @@ import {
   useSelectedOptionInUrlParam,
   getProductOptions,
   MappedProductOptions,
+  type OptimisticCartLineInput,
 } from '@shopify/hydrogen';
 import type {
-  CartLineInput,
   Maybe,
   ProductOptionValueSwatch,
-  SelectedOption,
+  MoneyV2,
 } from '@shopify/hydrogen/storefront-api-types';
-import {getVariantUrl} from '~/lib/variants';
+
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
-
-import {type OptimisticCartLineInput} from '@shopify/hydrogen';
-
-import type {MoneyV2} from '@shopify/hydrogen/storefront-api-types';
-
 import NavContext from '~/modules/nav-context';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
