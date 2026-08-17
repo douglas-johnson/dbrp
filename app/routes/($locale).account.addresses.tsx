@@ -9,13 +9,7 @@ import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
-import {
-  Form,
-  useActionData,
-  useNavigation,
-  useOutletContext,
-  type MetaFunction,
-} from '@remix-run/react';
+import { Form, useActionData, useNavigation, useOutletContext, type MetaFunction } from 'react-router';
 import {
   UPDATE_ADDRESS_MUTATION,
   DELETE_ADDRESS_MUTATION,

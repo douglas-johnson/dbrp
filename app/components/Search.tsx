@@ -1,10 +1,4 @@
-import {
-  Link,
-  Form,
-  useParams,
-  useFetcher,
-  type FormProps,
-} from '@remix-run/react';
+import { Link, Form, useParams, useFetcher, type FormProps } from 'react-router';
 import {Image, Money, Pagination} from '@shopify/hydrogen';
 import React, {useRef, useEffect} from 'react';
 import {applyTrackingParams} from '~/lib/search';

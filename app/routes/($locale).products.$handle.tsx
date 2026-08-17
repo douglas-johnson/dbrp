@@ -1,11 +1,6 @@
 import {useContext} from 'react';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {
-  useLoaderData,
-  type MetaFunction,
-  type FetcherWithComponents,
-  useNavigate,
-} from '@remix-run/react';
+import { useLoaderData, type MetaFunction, type FetcherWithComponents, useNavigate } from 'react-router';
 import type {
   ProductFragment,
   ProductVariantFragment,

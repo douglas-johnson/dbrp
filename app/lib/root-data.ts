@@ -1,4 +1,4 @@
-import {useMatches} from '@remix-run/react';
+import { useMatches } from 'react-router';
 import type {SerializeFrom} from '@shopify/remix-oxygen';
 import type {loader} from '~/root';
 

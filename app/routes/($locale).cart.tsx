@@ -1,4 +1,4 @@
-import {Await, type MetaFunction} from '@remix-run/react';
+import { Await, type MetaFunction } from 'react-router';
 import {Suspense} from 'react';
 import type {CartQueryDataReturn} from '@shopify/hydrogen';
 import {CartForm} from '@shopify/hydrogen';

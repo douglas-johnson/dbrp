@@ -1,4 +1,4 @@
-import {Await, NavLink} from '@remix-run/react';
+import { Await, NavLink } from 'react-router';
 import {Suspense, useContext} from 'react';
 import {useRootLoaderData} from '~/lib/root-data';
 import type {

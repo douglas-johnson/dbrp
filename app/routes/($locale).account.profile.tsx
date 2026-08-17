@@ -7,13 +7,7 @@ import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
-import {
-  Form,
-  useActionData,
-  useNavigation,
-  useOutletContext,
-  type MetaFunction,
-} from '@remix-run/react';
+import { Form, useActionData, useNavigation, useOutletContext, type MetaFunction } from 'react-router';
 
 export type ActionResponse = {
   error: string | null;

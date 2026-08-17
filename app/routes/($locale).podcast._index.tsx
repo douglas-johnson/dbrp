@@ -1,5 +1,5 @@
 import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
-import { Await, Link, useLoaderData, type MetaFunction } from '@remix-run/react';
+import { Await, Link, useLoaderData, type MetaFunction } from 'react-router';
 import loadEpisodes from '~/modules/episodes/loadEpisodes';
 import { Suspense } from 'react';
 import Episode from '~/components/Episode';
