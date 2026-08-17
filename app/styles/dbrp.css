@@ -30,8 +30,8 @@
 
 @layer site-layout {
   /**
-	 * Top Level Layout
-	 */
+   * Top Level Layout
+   */
   .dbrp {
     display: flex;
     flex-wrap: wrap;
@@ -57,8 +57,8 @@
   }
 
   /**
-	* Start Layout
-	*/
+  * Start Layout
+  */
 
   .dbrp-main {
     flex-basis: 50em;
@@ -67,8 +67,8 @@
   }
 
   /**
-	* Header & Nav
-	*/
+  * Header & Nav
+  */
 
   .dbrp-header {
     flex-basis: 10em;
@@ -117,8 +117,8 @@
   }
 
   /**
-	* Horizontal Layout
-	*/
+  * Horizontal Layout
+  */
 
   .has-root-padding {
     padding-inline: var(--root-padding-inline, 3.75vw);
@@ -126,8 +126,8 @@
   }
 
   /**
-	* Vertical Rhythm
-	*/
+  * Vertical Rhythm
+  */
 
   .rhythm > * + * {
     margin-block-start: 1lh;
@@ -168,8 +168,8 @@
   }
 
   /**
-	 * Headings
-	 */
+   * Headings
+   */
   :is(h1, h2, h3, h4, h5, h6) {
     line-height: var(--line-height-dynamic);
   }
@@ -185,8 +185,8 @@
 
 @layer components {
   /**
-	 * components/Dialog
-	 */
+   * components/Dialog
+   */
   .dbrp-dialog {
     inset-inline-start: auto;
     inset-inline-end: 0;
@@ -251,8 +251,8 @@
   }
 
   /**
-	 * Cart
-	 */
+   * Cart
+   */
   .cart-line + .cart-line {
     margin-block-start: 1lh;
   }
@@ -280,8 +280,8 @@
   }
 
   /**
-	 * Product Options
-	 */
+   * Product Options
+   */
   .product-options-grid > * + * {
     margin-inline-start: 2ch;
   }
@@ -297,8 +297,8 @@
   }
 
   /**
-	 * Button
-	 */
+   * Button
+   */
 
   .button {
     padding: 0;
@@ -319,8 +319,8 @@
   }
 
   /**
-	 * Size
-	 */
+   * Size
+   */
 
   .size-square-1 {
     inline-size: 2em;
@@ -328,8 +328,8 @@
   }
 
   /**
-	 * Color Scheme
-	 */
+   * Color Scheme
+   */
 
   .color-scheme {
     background-color: var(--background);
@@ -347,16 +347,16 @@
   }
 
   /**
-	 * Horizontal Layout
-	 */
+   * Horizontal Layout
+   */
   .has-root-padding {
     padding-inline: var(--root-padding-inline, 3.75vw);
     padding-block: var(--root-padding-block, 3.75vw);
   }
 
   /**
-	 * Vertical Rhythm
-	 */
+   * Vertical Rhythm
+   */
   .rhythm > * + * {
     margin-block-start: 1lh;
   }
