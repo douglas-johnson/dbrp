@@ -165,7 +165,7 @@ function ProductMain({
 }) {
   const {title, descriptionHtml} = product;
   return (
-    <div className="product-main">
+    <div className="product-main rhythm">
       <h1>{title}</h1>
       <ProductPrice
         price={selectedVariant?.price}
@@ -222,7 +222,7 @@ function ProductForm({
   const useableNavContext = useContext(NavContext);
 
   return (
-    <div className="product-form">
+    <div className="product-form rhythm">
       {productOptions.map((option) => {
         // If there is only a single value in the option values, don't display the option
         if (option.optionValues.length === 1) return null;
