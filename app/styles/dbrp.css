@@ -1,362 +1,367 @@
 @layer settings, elements,  site-layout, components, utilities;
 
 @layer settings {
-	:root {
-		--font-scale: max( 1rem, 0.9375rem + 0.3125vw );
-		--brand-color-orange: #ed7143;
-		--brand-color-brown: #462113;
+  :root {
+    --font-scale: max(1rem, 0.9375rem + 0.3125vw);
+    --brand-color-orange: #ed7143;
+    --brand-color-brown: #462113;
 
-		--font-size-step-n-2: 0.75em;
-		--font-size-step-n-1: 0.875em;
-		--font-size-step-0: var(--font-scale);
-		--font-size-step-1: 1.25em;
-		--font-size-step-2: 1.5em;
-		--font-size-step-3: 2em;
-		--font-size-step-4: 2.5em;
-		--font-size-step-5: 3em;
-		--font-size-step-6: 4em;
+    --font-size-step-n-2: 0.75em;
+    --font-size-step-n-1: 0.875em;
+    --font-size-step-0: var(--font-scale);
+    --font-size-step-1: 1.25em;
+    --font-size-step-2: 1.5em;
+    --font-size-step-3: 2em;
+    --font-size-step-4: 2.5em;
+    --font-size-step-5: 3em;
+    --font-size-step-6: 4em;
 
-		--line-height-step-n-4: 1.1;
-		--line-height-step-n-3: 1.2;
-		--line-height-step-n-2: 1.3;
-		--line-height-step-n-1: 1.4;
-		--line-height-step-0: 1.5;
-		--line-height-dynamic: calc(1em + 0.5rem);
+    --line-height-step-n-4: 1.1;
+    --line-height-step-n-3: 1.2;
+    --line-height-step-n-2: 1.3;
+    --line-height-step-n-1: 1.4;
+    --line-height-step-0: 1.5;
+    --line-height-dynamic: calc(1em + 0.5rem);
 
-		--root-padding-inline: 3.75vw;
-		--root-padding-block: 3.75vw;
-	}
+    --root-padding-inline: 3.75vw;
+    --root-padding-block: 3.75vw;
+  }
 }
 
 @layer site-layout {
-	/**
+  /**
 	 * Top Level Layout
 	 */
-	.dbrp {
-		display: flex;
-		flex-wrap: wrap;
-		min-block-size: 100lvh;
-	}
+  .dbrp {
+    display: flex;
+    flex-wrap: wrap;
+    min-block-size: 100lvh;
+  }
 
-	.dbrp-start {
-		flex-basis: 60em;
-		flex-grow: 6;
-		display: flex;
-	}
+  .dbrp-start {
+    flex-basis: 60em;
+    flex-grow: 6;
+    display: flex;
+  }
 
-	.dbrp-end {
-		flex-basis: 20em;
-		flex-grow: 2;
+  .dbrp-end {
+    flex-basis: 20em;
+    flex-grow: 2;
 
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		row-gap: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 2em;
 
-		padding: 1em;
-	}
+    padding: 1em;
+  }
 
-	/**
+  /**
 	* Start Layout
 	*/
 
-	.dbrp-main {
-		flex-basis: 50em;
-		flex-grow: 5;
-		min-block-size: 100lvh;
-	}
+  .dbrp-main {
+    flex-basis: 50em;
+    flex-grow: 5;
+    min-block-size: 100lvh;
+  }
 
-	/**
+  /**
 	* Header & Nav
 	*/
 
-	.dbrp-header {
-		flex-basis: 10em;
-		flex-grow: 1;
-		background-color: var(--brand-color-orange);
-	}
+  .dbrp-header {
+    flex-basis: 10em;
+    flex-grow: 1;
+    background-color: var(--brand-color-orange);
+  }
 
-	.dbrp-nav {
-		position: sticky;
-		top: 0;
-		block-size: 100svh;
-		display: flex;
-		flex-direction: column;
+  .dbrp-nav {
+    position: sticky;
+    top: 0;
+    block-size: 100svh;
+    display: flex;
+    flex-direction: column;
 
-		align-items: center;
-		text-align: center;
+    align-items: center;
+    text-align: center;
 
-		padding-block: 1em;
+    padding-block: 1em;
 
-		color: var(--brand-color-brown);
-	}
+    color: var(--brand-color-brown);
+  }
 
-	.dbrp-nav-menu {
-		display: flex;
-		flex-direction: column;
-		row-gap: 0.5em;
-	}
+  .dbrp-nav-menu {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5em;
+  }
 
-	.dbrp-logo-container {
-		flex-grow: 1;
-		writing-mode: vertical-lr;
+  .dbrp-logo-container {
+    flex-grow: 1;
+    writing-mode: vertical-lr;
 
-		container-type: inline-size;
-		align-self: center;
-		text-align: center;
-		inline-size: 100%;
-	}
+    container-type: inline-size;
+    align-self: center;
+    text-align: center;
+    inline-size: 100%;
+  }
 
-	.dbrp-logo {
-		font-size: 8cqi;
+  .dbrp-logo {
+    font-size: 8cqi;
 
-		text-transform: uppercase;
-		font-weight: 900;
+    text-transform: uppercase;
+    font-weight: 900;
 
-		transform: rotate(180deg);
-	}
+    transform: rotate(180deg);
+  }
 
-	/**
+  /**
 	* Horizontal Layout
 	*/
 
-	.has-root-padding {
-		padding-inline: var(--root-padding-inline, 3.75vw);
-		padding-block: var(--root-padding-block, 3.75vw);
-	}
+  .has-root-padding {
+    padding-inline: var(--root-padding-inline, 3.75vw);
+    padding-block: var(--root-padding-block, 3.75vw);
+  }
 
-	/**
+  /**
 	* Vertical Rhythm
 	*/
 
-	.rhythm > * + * {
-		margin-block-start: 1lh;
-	}
+  .rhythm > * + * {
+    margin-block-start: 1lh;
+  }
 
-	.rhythm > :is(h1,h2,h3,h4,h5,h6) + :is(:not(h1,h2,h3,h4,h5,h6)) {
-		margin-block-start: 0.5lh;
-	}
+  .rhythm > :is(h1, h2, h3, h4, h5, h6) + :is(:not(h1, h2, h3, h4, h5, h6)) {
+    margin-block-start: 0.5lh;
+  }
 }
 
 @layer elements {
-	body {
-		font-size: var(--font-scale);
-		line-height: 1.5;
-		font-family: Helvetica, Arial, sans-serif;
-	}
+  body {
+    font-size: var(--font-scale);
+    line-height: 1.5;
+    font-family: Helvetica, Arial, sans-serif;
+  }
 
-	a {
-		color: currentColor;
-		text-decoration-color: color-mix( in srgb, currentColor, transparent 60% );
-	}
+  a {
+    color: currentColor;
+    text-decoration-color: color-mix(in srgb, currentColor, transparent 60%);
+  }
 
-	a:is(:hover,:focus,:active) {
-		text-decoration-color: currentColor;
-	}
+  a:is(:hover, :focus, :active) {
+    text-decoration-color: currentColor;
+  }
 
-	menu {
-		list-style-type: none;
-		padding-inline-start: 0;
-	}
+  menu {
+    list-style-type: none;
+    padding-inline-start: 0;
+  }
 
-	button svg {
-		pointer-events: none;
-	}
+  button svg {
+    pointer-events: none;
+  }
 
-	svg :not([fill]) {
-		fill: currentColor;
-	}
+  svg :not([fill]) {
+    fill: currentColor;
+  }
 
-	/**
+  /**
 	 * Headings
 	 */
-	:is(h1,h2,h3,h4,h5,h6) {
-		line-height: var(--line-height-dynamic);
-	}
+  :is(h1, h2, h3, h4, h5, h6) {
+    line-height: var(--line-height-dynamic);
+  }
 
-	h1 {
-		font-size: var(--font-size-step-6);
-	}
+  h1 {
+    font-size: var(--font-size-step-6);
+  }
 
-	h2 {
-		font-size: var(--font-size-step-5);
-	}
+  h2 {
+    font-size: var(--font-size-step-5);
+  }
 }
 
 @layer components {
-	/**
+  /**
 	 * components/Dialog
 	 */
-	.dbrp-dialog {
-		inset-inline-start: auto;
-		inset-inline-end: 0;
-		inline-size: min(100vw, 24em);
-		block-size: 100dvh;
-		max-block-size: initial;
-		animation: enter-dialog linear 300ms;
-		border: none;
-		margin: 0;
-	}
+  .dbrp-dialog {
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    inline-size: min(100vw, 24em);
+    block-size: 100dvh;
+    max-block-size: initial;
+    animation: enter-dialog linear 300ms;
+    border: none;
+    margin: 0;
+  }
 
-	@media screen and (prefers-reduced-motion) {
-		.dbrp-dialog {
-			animation-duration: 1ms;
-		}
-	}
+  @media screen and (prefers-reduced-motion) {
+    .dbrp-dialog {
+      animation-duration: 1ms;
+    }
+  }
 
-	@keyframes enter-dialog{
-		from {
-			transform: translate3d(100%, 0, 0);
-		}
-		to {
-			transform: translate3d(0,0,0);
-		}
-	}
+  @keyframes enter-dialog {
+    from {
+      transform: translate3d(100%, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
 
-	.dbrp-dialog-header {
-		text-align: end;
-	}
+  .dbrp-dialog-header {
+    text-align: end;
+  }
 
-	.dbrp-dialog-content {}
+  .dbrp-dialog-content {
+  }
 
-	.recommended-products {}
+  .recommended-products {
+  }
 
-	.recommended-products-grid {
-		display: flex;
-		flex-wrap: wrap;
-		row-gap: 1em;
-	}
+  .recommended-products-grid {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 1em;
+  }
 
-	.recommended-product {
-		padding: 1em;
-		flex-basis: 20em;
-		flex-grow: 1;
+  .recommended-product {
+    padding: 1em;
+    flex-basis: 20em;
+    flex-grow: 1;
 
-		display: flex;
-		flex-wrap: wrap;
-		column-gap: 1em;
-		row-gap: 0.5em;
-	}
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 1em;
+    row-gap: 0.5em;
+  }
 
-	.recommended-product-start {
-		flex-basis: 8em;
-		flex-grow: 1;
-	}
-	
-	.recommended-product-end {
-		flex-basis: 12em;
-		flex-grow: 1;
-	}
+  .recommended-product-start {
+    flex-basis: 8em;
+    flex-grow: 1;
+  }
 
-	/**
+  .recommended-product-end {
+    flex-basis: 12em;
+    flex-grow: 1;
+  }
+
+  /**
 	 * Cart
 	 */
-	.cart-line + .cart-line  {
-		margin-block-start: 1lh;
-	}
-	
-	.cart-line {
-		display: grid;
+  .cart-line + .cart-line {
+    margin-block-start: 1lh;
+  }
 
-		grid-template-columns: 4.5em 1fr;
-		column-gap: 0.5em;
-	}
+  .cart-line {
+    display: grid;
 
-	.cart-line-quantity {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		column-gap: 2ch;
-	}
-	.cart-line-quantity > :nth-child( 2 ) {
-		margin-inline-start: auto;
-	}
+    grid-template-columns: 4.5em 1fr;
+    column-gap: 0.5em;
+  }
 
-	.cart-subtotal {
-		display: grid;
-		grid-template-columns: 1fr min-content;
-	}
+  .cart-line-quantity {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 2ch;
+  }
+  .cart-line-quantity > :nth-child(2) {
+    margin-inline-start: auto;
+  }
 
-	/**
-	 * product-options-grid
+  .cart-subtotal {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+  }
+
+  /**
+	 * Product Options
 	 */
-	.product-options-grid > * + * {
-		margin-inline-start: 2ch;
-	}
+  .product-options-grid > * + * {
+    margin-inline-start: 2ch;
+  }
+
+  .product-options-item {
+    padding: 0.25em 0.625em 0.125em 0.625em;
+  }
 }
 
 @layer utilities {
-	.text-decoration-line-none {
-		text-decoration-line: none;
-	}
+  .text-decoration-line-none {
+    text-decoration-line: none;
+  }
 
-	/**
+  /**
 	 * Button
 	 */
 
-	.button {
-		padding: 0;
-		background: none;
-		border: solid 2px currentColor;
-	}
-	
-	.button:is([type=button],:any-link) {
-		cursor: pointer;
-	}
-	
-	.button.is-transparent {
-		border-color: transparent;
-	}
+  .button {
+    padding: 0;
+    background: none;
+    border: solid 2px currentColor;
+  }
 
-	button svg {
-		pointer-events: none;
-	}
+  .button:is([type='button'], :any-link) {
+    cursor: pointer;
+  }
 
-	/**
+  .button.is-transparent {
+    border-color: transparent;
+  }
+
+  button svg {
+    pointer-events: none;
+  }
+
+  /**
 	 * Size
 	 */
 
-	.size-square-1 {
-		inline-size: 2em;
-		block-size: 2em;
-	}
+  .size-square-1 {
+    inline-size: 2em;
+    block-size: 2em;
+  }
 
-	/**
+  /**
 	 * Color Scheme
 	 */
 
-	.color-scheme {
-		background-color: var(--background);
-		color: var(--text);
-	}
+  .color-scheme {
+    background-color: var(--background);
+    color: var(--text);
+  }
 
-	.color-scheme-light {
-		--background: whitesmoke;
-		--text: black;
-	}
+  .color-scheme-light {
+    --background: whitesmoke;
+    --text: black;
+  }
 
-	.color-scheme-dark {
-		--background: black;
-		--text: whitesmoke;
-	}
+  .color-scheme-dark {
+    --background: black;
+    --text: whitesmoke;
+  }
 
-	/**
+  /**
 	 * Horizontal Layout
 	 */
-	.has-root-padding {
-		padding-inline: var(--root-padding-inline, 3.75vw);
-		padding-block: var(--root-padding-block, 3.75vw);
-	}
+  .has-root-padding {
+    padding-inline: var(--root-padding-inline, 3.75vw);
+    padding-block: var(--root-padding-block, 3.75vw);
+  }
 
-	/**
+  /**
 	 * Vertical Rhythm
 	 */
-	.rhythm > * + * {
-		margin-block-start: 1lh;
-	}
+  .rhythm > * + * {
+    margin-block-start: 1lh;
+  }
 
-	.rhythm > :is(h1,h2,h3,h4,h5,h6) + :is(:not(h1,h2,h3,h4,h5,h6)) {
-		margin-block-start: 0.5lh;
-	}
-
+  .rhythm > :is(h1, h2, h3, h4, h5, h6) + :is(:not(h1, h2, h3, h4, h5, h6)) {
+    margin-block-start: 0.5lh;
+  }
 }
