@@ -1,11 +1,11 @@
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from '@remix-run/react';
+import {useLoaderData} from 'react-router';
+import type {Route} from './+types/($locale).pages.$handle';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Dad Bod Rap Pod | ${data?.page.title ?? ''}`}];
 };
 
-export async function loader({params, context}: LoaderFunctionArgs) {
+export async function loader({params, context}: Route.LoaderArgs) {
   if (!params.handle) {
     throw new Error('Missing page handle');
   }
@@ -20,7 +20,7 @@ export async function loader({params, context}: LoaderFunctionArgs) {
     throw new Response('Not Found', {status: 404});
   }
 
-  return json({page});
+  return {page};
 }
 
 export default function Page() {

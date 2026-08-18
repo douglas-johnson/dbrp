@@ -3,7 +3,7 @@ import {
   createCookieSessionStorage,
   type SessionStorage,
   type Session,
-} from '@shopify/remix-oxygen';
+} from 'react-router';
 
 /**
  * This is a custom session implementation for your Hydrogen shop.
@@ -11,6 +11,8 @@ import {
  * swap out the cookie-based implementation with something else!
  */
 export class AppSession implements HydrogenSession {
+  public isPending = false;
+
   #sessionStorage;
   #session;
 
@@ -46,22 +48,27 @@ export class AppSession implements HydrogenSession {
   }
 
   get flash() {
+    this.isPending = true;
     return this.#session.flash;
   }
 
   get unset() {
+    this.isPending = true;
     return this.#session.unset;
   }
 
   get set() {
+    this.isPending = true;
     return this.#session.set;
   }
 
   destroy() {
+    this.isPending = true;
     return this.#sessionStorage.destroySession(this.#session);
   }
 
   commit() {
+    this.isPending = false;
     return this.#sessionStorage.commitSession(this.#session);
   }
 }

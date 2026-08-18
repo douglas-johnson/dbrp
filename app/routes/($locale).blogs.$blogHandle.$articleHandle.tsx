@@ -1,12 +1,13 @@
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from '@remix-run/react';
+import {useLoaderData} from 'react-router';
 import {Image} from '@shopify/hydrogen';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+import type {Route} from './+types/($locale).blogs.$blogHandle.$articleHandle';
+
+export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `${data?.article.title ?? ''} | Dad Bod Rap Pod`}];
 };
 
-export async function loader({params, context}: LoaderFunctionArgs) {
+export async function loader({params, context}: Route.LoaderArgs) {
   const {blogHandle, articleHandle} = params;
 
   if (!articleHandle || !blogHandle) {
@@ -23,7 +24,7 @@ export async function loader({params, context}: LoaderFunctionArgs) {
 
   const article = blog.articleByHandle;
 
-  return json({article});
+  return {article};
 }
 
 export default function Article() {
@@ -38,9 +39,7 @@ export default function Article() {
 
   return (
     <div className="article rhythm">
-      <h1>
-        {title}
-      </h1>
+      <h1>{title}</h1>
 
       {image && <Image data={image} sizes="90vw" loading="eager" />}
       <div

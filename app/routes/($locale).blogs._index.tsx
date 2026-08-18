@@ -1,15 +1,15 @@
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type MetaFunction} from '@remix-run/react';
+import {Link, useLoaderData} from 'react-router';
 import {Pagination, getPaginationVariables} from '@shopify/hydrogen';
+import type {Route} from './+types/($locale).blogs._index';
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [{title: `Dad Bod Rap Pod | Blogs`}];
 };
 
 export const loader = async ({
   request,
   context: {storefront},
-}: LoaderFunctionArgs) => {
+}: Route.LoaderArgs) => {
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 10,
   });
@@ -20,7 +20,7 @@ export const loader = async ({
     },
   });
 
-  return json({blogs});
+  return {blogs};
 };
 
 export default function Blogs() {

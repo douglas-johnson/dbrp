@@ -2,7 +2,7 @@ import { type Episode as EpisodeType } from "~/modules/episodes/types"
 import Imgix from "./Imgix"
 import sanitizeHtml from 'sanitize-html';
 import anchorme from "anchorme";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 
 function cleanEpisodeSummaryHTML( html: string ): string {
 	return [
@@ -12,7 +12,7 @@ function cleanEpisodeSummaryHTML( html: string ): string {
 	].reduce(
 		(x, f) => f(x),
 		html
-	)
+	);
 }
 
 export default function Episode( { episode }: { episode: EpisodeType } ) {

@@ -1,16 +1,17 @@
-import {Await, type MetaFunction} from '@remix-run/react';
+import {Await, data} from 'react-router';
 import {Suspense} from 'react';
 import type {CartQueryDataReturn} from '@shopify/hydrogen';
 import {CartForm} from '@shopify/hydrogen';
-import {json, type ActionFunctionArgs} from '@shopify/remix-oxygen';
 import {CartMain} from '~/components/Cart';
 import {useRootLoaderData} from '~/lib/root-data';
 
-export const meta: MetaFunction = () => {
+import type {Route} from './+types/($locale).cart';
+
+export const meta: Route.MetaFunction = () => {
   return [{title: `Dad Bod Rap Pod | Cart`}];
 };
 
-export async function action({request, context}: ActionFunctionArgs) {
+export async function action({request, context}: Route.ActionArgs) {
   const {cart} = context;
 
   const formData = await request.formData();
@@ -70,7 +71,7 @@ export async function action({request, context}: ActionFunctionArgs) {
 
   headers.append('Set-Cookie', await context.session.commit());
 
-  return json(
+  return data(
     {
       cart: cartResult,
       errors,

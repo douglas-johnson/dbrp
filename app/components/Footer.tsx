@@ -1,4 +1,4 @@
-import {NavLink} from '@remix-run/react';
+import { NavLink } from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 import {useRootLoaderData} from '~/lib/root-data';
 

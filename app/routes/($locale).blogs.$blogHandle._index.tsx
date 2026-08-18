@@ -1,9 +1,10 @@
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type MetaFunction} from '@remix-run/react';
+import {Link, useLoaderData} from 'react-router';
 import {Image, Pagination, getPaginationVariables} from '@shopify/hydrogen';
 import type {ArticleItemFragment} from 'storefrontapi.generated';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+import type {Route} from './+types/($locale).blogs.$blogHandle._index';
+
+export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Dad Bod Rap Pod | ${data?.blog.title ?? ''} blog`}];
 };
 
@@ -11,7 +12,7 @@ export async function loader({
   request,
   params,
   context: {storefront},
-}: LoaderFunctionArgs) {
+}: Route.LoaderArgs) {
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 4,
   });
@@ -31,7 +32,7 @@ export async function loader({
     throw new Response('Not found', {status: 404});
   }
 
-  return json({blog});
+  return {blog};
 }
 
 export default function Blog() {

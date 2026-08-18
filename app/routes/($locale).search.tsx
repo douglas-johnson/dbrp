@@ -1,14 +1,14 @@
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from '@remix-run/react';
+import {useLoaderData} from 'react-router';
 import {getPaginationVariables} from '@shopify/hydrogen';
+import type {Route} from './+types/($locale).search';
 
 import {SearchForm, SearchResults, NoSearchResults} from '~/components/Search';
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [{title: `Dad Bod Rap Pod | Search`}];
 };
 
-export async function loader({request, context}: LoaderFunctionArgs) {
+export async function loader({request, context}: Route.LoaderArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const variables = getPaginationVariables(request, {pageBy: 8});
@@ -41,10 +41,10 @@ export async function loader({request, context}: LoaderFunctionArgs) {
     totalResults,
   };
 
-  return defer({
+  return {
     searchTerm,
     searchResults,
-  });
+  };
 }
 
 export default function SearchPage() {

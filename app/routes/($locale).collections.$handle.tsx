@@ -1,5 +1,5 @@
-import {json, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, Link, type MetaFunction} from '@remix-run/react';
+import {redirect} from 'react-router';
+import {useLoaderData, Link} from 'react-router';
 import {
   Pagination,
   getPaginationVariables,
@@ -8,12 +8,15 @@ import {
 } from '@shopify/hydrogen';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
+import type {Route} from './+types/($locale).collections.$handle';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Dad Bod Rap Pod | ${data?.collection.title ?? ''} Collection`}];
+export const meta: Route.MetaFunction = ({data}) => {
+  return [
+    {title: `Dad Bod Rap Pod | ${data?.collection.title ?? ''} Collection`},
+  ];
 };
 
-export async function loader({request, params, context}: LoaderFunctionArgs) {
+export async function loader({request, params, context}: Route.LoaderArgs) {
   const {handle} = params;
   const {storefront} = context;
   const paginationVariables = getPaginationVariables(request, {
@@ -33,7 +36,7 @@ export async function loader({request, params, context}: LoaderFunctionArgs) {
       status: 404,
     });
   }
-  return json({collection});
+  return {collection};
 }
 
 export default function Collection() {

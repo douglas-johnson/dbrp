@@ -1,22 +1,14 @@
 /// <reference types="vite/client" />
-/// <reference types="@shopify/remix-oxygen" />
 /// <reference types="@shopify/oxygen-workers-types" />
+/// <reference types="@shopify/hydrogen/react-router-types" />
 
 // Enhance TypeScript's built-in typings.
 import '@total-typescript/ts-reset';
 
 import type {
-  Storefront,
-  CustomerAccount,
-  HydrogenCart,
-  HydrogenSessionData,
-  WithCache,
-} from '@shopify/hydrogen';
-import type {
   LanguageCode,
   CountryCode,
 } from '@shopify/hydrogen/storefront-api-types';
-import type {AppSession} from '~/lib/session';
 
 declare global {
   /**
@@ -35,8 +27,8 @@ declare global {
     PUBLIC_STOREFRONT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_URL: string;
-	DBRP_API_URL_BASE: string;
-	SHOP_ID: string;
+    DBRP_API_URL_BASE: string;
+    SHOP_ID: string;
   }
 
   /**
@@ -47,24 +39,4 @@ declare global {
     country: CountryCode;
     pathPrefix: string;
   };
-}
-
-declare module '@shopify/remix-oxygen' {
-  /**
-   * Declare local additions to the Remix loader context.
-   */
-  interface AppLoadContext {
-    env: Env;
-    cart: HydrogenCart;
-    storefront: Storefront<I18nLocale>;
-    customerAccount: CustomerAccount;
-    session: AppSession;
-    waitUntil: ExecutionContext['waitUntil'];
-	withCache: WithCache;
-  }
-
-  /**
-   * Declare local additions to the Remix session data.
-   */
-  interface SessionData extends HydrogenSessionData {}
 }

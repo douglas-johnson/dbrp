@@ -1,10 +1,12 @@
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {data} from 'react-router';
 import type {
   NormalizedPredictiveSearch,
   NormalizedPredictiveSearchResults,
 } from '~/components/Search';
 import {NO_PREDICTIVE_SEARCH_RESULTS} from '~/components/Search';
 import {applyTrackingParams} from '~/lib/search';
+
+import type {Route} from './+types/($locale).api.predictive-search';
 
 import type {
   PredictiveArticleFragment,
@@ -34,14 +36,14 @@ const DEFAULT_SEARCH_TYPES: PredictiveSearchTypes[] = [
  * Fetches the search results from the predictive search API
  * requested by the SearchForm component
  */
-export async function loader({request, params, context}: LoaderFunctionArgs) {
+export async function loader({request, params, context}: Route.LoaderArgs) {
   const search = await fetchPredictiveSearchResults({
     params,
     request,
     context,
   });
 
-  return json(search, {
+  return data(search, {
     headers: {'Cache-Control': `max-age=${search.searchTerm ? 60 : 3600}`},
   });
 }
@@ -50,7 +52,7 @@ async function fetchPredictiveSearchResults({
   params,
   request,
   context,
-}: Pick<LoaderFunctionArgs, 'params' | 'context' | 'request'>) {
+}: Pick<Route.LoaderArgs, 'params' | 'context' | 'request'>) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const searchTerm = searchParams.get('q') || '';
@@ -99,7 +101,7 @@ async function fetchPredictiveSearchResults({
  */
 export function normalizePredictiveSearchResults(
   predictiveSearch: PredictiveSearchQuery['predictiveSearch'],
-  locale: LoaderFunctionArgs['params']['locale'],
+  locale: Route.LoaderArgs['params']['locale'],
 ): NormalizedPredictiveSearch {
   let totalResults = 0;
   if (!predictiveSearch) {
