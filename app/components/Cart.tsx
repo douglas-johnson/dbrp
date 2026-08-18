@@ -1,6 +1,6 @@
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 import type {CartLineUpdateInput} from '@shopify/hydrogen/storefront-api-types';
-import { Link } from 'react-router';
+import {Link} from 'react-router';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
 
@@ -76,47 +76,51 @@ function CartLineItem({
   return (
     <li key={id} className="cart-line">
       {image && (
-		<div>
-			<figure>
-        <Image
-          alt={title}
-          aspectRatio="1/1"
-          data={image}
-          height={100}
-          loading="lazy"
-          width={100}
-        />
-		</figure>
-		</div>
+        <div>
+          <figure>
+            <Image
+              alt={title}
+              aspectRatio="1/1"
+              data={image}
+              height={100}
+              loading="lazy"
+              width={100}
+            />
+          </figure>
+        </div>
       )}
-   
+
       <div>
-          <p>
-            <strong><Link
-          prefetch="intent"
-          to={lineItemUrl}
-          onClick={() => {
-            if (layout === 'aside') {
-              // close the drawer
-              window.location.href = lineItemUrl;
-            }
-          }}
-        >{product.title} </Link></strong>
-          </p>
-       
+        <p>
+          <strong>
+            <Link
+              prefetch="intent"
+              to={lineItemUrl}
+              onClick={() => {
+                if (layout === 'aside') {
+                  // close the drawer
+                  window.location.href = lineItemUrl;
+                }
+              }}
+            >
+              {product.title}{' '}
+            </Link>
+          </strong>
+        </p>
+
         <CartLinePrice line={line} as="span" />
-		 { ! onlyOptionIsDefault(selectedOptions) && (
-			<ul>
-				{selectedOptions.map((option) => (
-				<li key={option.name}>
-					<small>
-					{option.name}: {option.value}
-					</small>
-				</li>
-				))}
-			</ul>
-		 ) } 
-        
+        {!onlyOptionIsDefault(selectedOptions) && (
+          <ul>
+            {selectedOptions.map((option) => (
+              <li key={option.name}>
+                <small>
+                  {option.name}: {option.value}
+                </small>
+              </li>
+            ))}
+          </ul>
+        )}
+
         <CartLineQuantity line={line} />
       </div>
     </li>
@@ -136,19 +140,22 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl: string}) {
   );
 }
 
-function onlyOptionIsDefault( selectedOptions: Object[] ): boolean {
+function onlyOptionIsDefault(
+  selectedOptions: CartLine['merchandise']['selectedOptions'],
+): boolean {
+  if (0 === selectedOptions.length) {
+    return false;
+  }
 
-	// something wrong here.
-	if ( 0 === selectedOptions.length ) {
-		return false;
-	}
+  // more than one option
+  if (1 < selectedOptions.length) {
+    return false;
+  }
 
-	// more than one option
-	if ( 1 < selectedOptions.length ) {
-		return false;
-	}
-
-	return 'Title' === selectedOptions[0].name && 'Default Title' === selectedOptions[0].value;
+  return (
+    'Title' === selectedOptions[0].name &&
+    'Default Title' === selectedOptions[0].value
+  );
 }
 
 export function CartSummary({
