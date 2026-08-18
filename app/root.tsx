@@ -1,16 +1,16 @@
 import {useNonce} from '@shopify/hydrogen';
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Links,
   Meta,
   Outlet,
   Scripts,
   useRouteError,
-  useLoaderData,
+  useRouteLoaderData,
   ScrollRestoration,
   isRouteErrorResponse,
   type ShouldRevalidateFunction,
 } from 'react-router';
+import type {Route} from './+types/root';
 import favicon from './assets/favicon.svg';
 import resetStyles from './styles/reset.css?url';
 import appStyles from './styles/app.css?url';
@@ -18,9 +18,9 @@ import dbrpStyles from './styles/dbrp.css?url';
 import {Layout} from '~/components/Layout';
 
 import type {
-	// FeaturedCollectionFragment,
-	RecommendedProductsQuery,
-  } from 'storefrontapi.generated';
+  // FeaturedCollectionFragment,
+  RecommendedProductsQuery,
+} from 'storefrontapi.generated';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -59,7 +59,9 @@ export function links() {
   ];
 }
 
-export async function loader({context}: LoaderFunctionArgs) {
+export type RootLoader = typeof loader;
+
+export async function loader({context}: Route.LoaderArgs) {
   const {storefront, customerAccount, cart} = context;
   const publicStoreDomain = context.env.PUBLIC_STORE_DOMAIN;
 
@@ -84,21 +86,15 @@ export async function loader({context}: LoaderFunctionArgs) {
 
   const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
 
-  return defer(
-    {
-      cart: cartPromise,
-      footer: footerPromise,
-      header: await headerPromise,
-      isLoggedIn: isLoggedInPromise,
-      publicStoreDomain,
-	  products: recommendedProducts
-    },
-    {
-      headers: {
-        'Set-Cookie': await context.session.commit(),
-      },
-    },
-  );
+  // Session is committed in server.ts when `session.isPending`.
+  return {
+    cart: cartPromise,
+    footer: footerPromise,
+    header: await headerPromise,
+    isLoggedIn: isLoggedInPromise,
+    publicStoreDomain,
+    products: recommendedProducts,
+  };
 }
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
@@ -132,9 +128,8 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
 ` as const;
 
-export default function App() {
+export default function App({loaderData}: Route.ComponentProps) {
   const nonce = useNonce();
-  const data = useLoaderData<typeof loader>();
 
   return (
     <html lang="en">
@@ -145,7 +140,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Layout {...data}>
+        <Layout {...loaderData}>
           <Outlet />
         </Layout>
         <ScrollRestoration nonce={nonce} />
@@ -157,7 +152,8 @@ export default function App() {
 
 export function ErrorBoundary() {
   const error = useRouteError();
-  const rootData = useLoaderData<typeof loader>();
+  // May be undefined if the root loader itself threw.
+  const rootData = useRouteLoaderData<RootLoader>('root');
   const nonce = useNonce();
   let errorMessage = 'Unknown error';
   let errorStatus = 500;
@@ -169,6 +165,18 @@ export function ErrorBoundary() {
     errorMessage = error.message;
   }
 
+  const errorContent = (
+    <div className="route-error">
+      <h1>Oops</h1>
+      <h2>{errorStatus}</h2>
+      {errorMessage && (
+        <fieldset>
+          <pre>{errorMessage}</pre>
+        </fieldset>
+      )}
+    </div>
+  );
+
   return (
     <html lang="en">
       <head>
@@ -178,17 +186,11 @@ export function ErrorBoundary() {
         <Links />
       </head>
       <body>
-        <Layout {...rootData}>
-          <div className="route-error">
-            <h1>Oops</h1>
-            <h2>{errorStatus}</h2>
-            {errorMessage && (
-              <fieldset>
-                <pre>{errorMessage}</pre>
-              </fieldset>
-            )}
-          </div>
-        </Layout>
+        {rootData ? (
+          <Layout {...rootData}>{errorContent}</Layout>
+        ) : (
+          errorContent
+        )}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
