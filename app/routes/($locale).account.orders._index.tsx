@@ -1,22 +1,23 @@
-import { Link, useLoaderData, type MetaFunction } from 'react-router';
+import {Link, useLoaderData, data as remixData} from 'react-router';
 import {
   Money,
   Pagination,
   getPaginationVariables,
   flattenConnection,
 } from '@shopify/hydrogen';
-import {json, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {redirect} from 'react-router';
+import type {Route} from './+types/($locale).account.orders._index';
 import {CUSTOMER_ORDERS_QUERY} from '~/graphql/customer-account/CustomerOrdersQuery';
 import type {
   CustomerOrdersFragment,
   OrderItemFragment,
 } from 'customer-accountapi.generated';
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [{title: 'Orders'}];
 };
 
-export async function loader({request, context}: LoaderFunctionArgs) {
+export async function loader({request, context}: Route.LoaderArgs) {
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 20,
   });
@@ -34,7 +35,7 @@ export async function loader({request, context}: LoaderFunctionArgs) {
     throw Error('Customer orders not found');
   }
 
-  return json(
+  return remixData(
     {customer: data.customer},
     {
       headers: {

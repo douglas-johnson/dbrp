@@ -1,7 +1,7 @@
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import { useLoaderData, Link } from 'react-router';
+import {useLoaderData, Link} from 'react-router';
+import type {Route} from './+types/($locale).policies._index';
 
-export async function loader({context}: LoaderFunctionArgs) {
+export async function loader({context}: Route.LoaderArgs) {
   const data = await context.storefront.query(POLICIES_QUERY);
   const policies = Object.values(data.shop || {});
 
@@ -9,7 +9,7 @@ export async function loader({context}: LoaderFunctionArgs) {
     throw new Response('No policies found', {status: 404});
   }
 
-  return json({policies});
+  return {policies};
 }
 
 export default function Policies() {

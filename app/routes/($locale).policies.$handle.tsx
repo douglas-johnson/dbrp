@@ -1,17 +1,17 @@
-import {json, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import { Link, useLoaderData, type MetaFunction } from 'react-router';
+import {Link, useLoaderData} from 'react-router';
 import {type Shop} from '@shopify/hydrogen/storefront-api-types';
+import type {Route} from './+types/($locale).policies.$handle';
 
 type SelectedPolicies = keyof Pick<
   Shop,
   'privacyPolicy' | 'shippingPolicy' | 'termsOfService' | 'refundPolicy'
 >;
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Dad Bod Rap Pod | ${data?.policy.title ?? ''}`}];
 };
 
-export async function loader({params, context}: LoaderFunctionArgs) {
+export async function loader({params, context}: Route.LoaderArgs) {
   if (!params.handle) {
     throw new Response('No handle was passed in', {status: 404});
   }
@@ -38,7 +38,7 @@ export async function loader({params, context}: LoaderFunctionArgs) {
     throw new Response('Could not find the policy', {status: 404});
   }
 
-  return json({policy});
+  return {policy};
 }
 
 export default function Policy() {
@@ -53,7 +53,10 @@ export default function Policy() {
       </div>
       <br />
       <h1>{policy.title}</h1>
-      <div className="article rhythm" dangerouslySetInnerHTML={{__html: policy.body}} />
+      <div
+        className="article rhythm"
+        dangerouslySetInnerHTML={{__html: policy.body}}
+      />
     </div>
   );
 }

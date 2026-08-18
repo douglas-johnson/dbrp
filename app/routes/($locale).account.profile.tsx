@@ -1,27 +1,30 @@
 import type {CustomerFragment} from 'customer-accountapi.generated';
 import type {CustomerUpdateInput} from '@shopify/hydrogen/customer-account-api-types';
 import {CUSTOMER_UPDATE_MUTATION} from '~/graphql/customer-account/CustomerUpdateMutation';
+import {redirect, data as remixData} from 'react-router';
+
+import type {Route} from './+types/($locale).account.profile';
+
 import {
-  json,
-  redirect,
-  type ActionFunctionArgs,
-  type LoaderFunctionArgs,
-} from '@shopify/remix-oxygen';
-import { Form, useActionData, useNavigation, useOutletContext, type MetaFunction } from 'react-router';
+  Form,
+  useActionData,
+  useNavigation,
+  useOutletContext,
+} from 'react-router';
 
 export type ActionResponse = {
   error: string | null;
   customer: CustomerFragment | null;
 };
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [{title: 'Profile'}];
 };
 
-export async function loader({context}: LoaderFunctionArgs) {
+export async function loader({context}: Route.LoaderArgs) {
   await context.customerAccount.handleAuthStatus();
 
-  return json(
+  return remixData(
     {},
     {
       headers: {
@@ -31,11 +34,11 @@ export async function loader({context}: LoaderFunctionArgs) {
   );
 }
 
-export async function action({request, context}: ActionFunctionArgs) {
+export async function action({request, context}: Route.ActionArgs) {
   const {customerAccount} = context;
 
   if (request.method !== 'PUT') {
-    return json({error: 'Method not allowed'}, {status: 405});
+    return remixData({error: 'Method not allowed'}, {status: 405});
   }
 
   const form = await request.formData();
@@ -70,7 +73,7 @@ export async function action({request, context}: ActionFunctionArgs) {
       throw new Error('Customer profile update failed.');
     }
 
-    return json(
+    return remixData(
       {
         error: null,
         customer: data?.customerUpdate?.customer,
@@ -82,7 +85,7 @@ export async function action({request, context}: ActionFunctionArgs) {
       },
     );
   } catch (error: any) {
-    return json(
+    return remixData(
       {error: error.message, customer: null},
       {
         status: 400,

@@ -1,7 +1,7 @@
-import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import { Await, useLoaderData, Link, type MetaFunction } from 'react-router';
+import {Await, useLoaderData, Link} from 'react-router';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
+import type {Route} from './+types/($locale)._index';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
@@ -10,25 +10,29 @@ import type {
 import loadEpisodes from '~/modules/episodes/loadEpisodes';
 import Episode from '~/components/Episode';
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [{title: 'Dad Bod Rap Pod'}];
 };
 
-export async function loader({context}: LoaderFunctionArgs) {
-	const {storefront} = context;
-	const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
-	const featuredCollection = collections.nodes[0];
+export async function loader({context}: Route.LoaderArgs) {
+  const {storefront} = context;
+  const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
+  const featuredCollection = collections.nodes[0];
 
-	const {blog} = await storefront.query(BLOGS_QUERY, {
-		variables: {
-			blogHandle: 'news',
-			first: 1
-		},
-	});
+  const {blog} = await storefront.query(BLOGS_QUERY, {
+    variables: {
+      blogHandle: 'news',
+      first: 1,
+    },
+  });
 
-	const episodeData = loadEpisodes( context, 1 );
+  const episodeData = loadEpisodes(context, 1);
 
-	return defer({featuredCollection, episodeData, article: blog.articles.nodes[0]});
+  return {
+    featuredCollection,
+    episodeData,
+    article: blog?.articles.nodes[0] ?? null,
+  };
 }
 
 // NOTE: https://shopify.dev/docs/api/storefront/latest/objects/blog
@@ -93,36 +97,49 @@ export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <>
-		{/* <FeaturedCollection collection={data.featuredCollection} /> */}
-		{/* <RecommendedProducts products={data.recommendedProducts} /> */}
-		<h1>Dad Bod Rap Pod</h1>
-		<ul>
-			<li><a href="https://www.patreon.com/dadbodrappod">Join The Patreon</a></li>
-			<li><a href="https://open.spotify.com/show/6jSzuDY9ex0aNKBUENWUfE">Listen on Spotify</a></li>
-			<li><a href="https://feeds.megaphone.fm/dadbodrappod">RSS Feed</a></li>
-		</ul>
-		<h2>News</h2>
-		<Suspense fallback={<div>Loading latest blog post</div>}>
-			<Await resolve={data.article}>
-				{
-					(article) => (
-						<p><Link to={`/blogs/${article.blog.handle}/${article.handle}`}>{article.title}</Link></p>
-					)
-				}
-			</Await>
-		</Suspense>
-		<h2>Latest Episode</h2>
-		<Suspense fallback={<div>Loading latest episode</div>}>
-			<Await resolve={data.episodeData}>
-				{({episodes}) => (
-					<>
-						<Episode episode={episodes[0]} />
-						<p><Link to={'/podcast/'}>More Episodes</Link></p>
-					</>
-				)}
-			</Await>
-		</Suspense>
-		
+      {/* <FeaturedCollection collection={data.featuredCollection} /> */}
+      {/* <RecommendedProducts products={data.recommendedProducts} /> */}
+      <h1>Dad Bod Rap Pod</h1>
+      <ul>
+        <li>
+          <a href="https://www.patreon.com/dadbodrappod">Join The Patreon</a>
+        </li>
+        <li>
+          <a href="https://open.spotify.com/show/6jSzuDY9ex0aNKBUENWUfE">
+            Listen on Spotify
+          </a>
+        </li>
+        <li>
+          <a href="https://feeds.megaphone.fm/dadbodrappod">RSS Feed</a>
+        </li>
+      </ul>
+      <h2>News</h2>
+      <Suspense fallback={<div>Loading latest blog post</div>}>
+        <Await resolve={data.article}>
+          {(article) =>
+            article ? (
+              <p>
+                <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
+                  {article.title}
+                </Link>
+              </p>
+            ) : null
+          }
+        </Await>
+      </Suspense>
+      <h2>Latest Episode</h2>
+      <Suspense fallback={<div>Loading latest episode</div>}>
+        <Await resolve={data.episodeData}>
+          {({episodes}) => (
+            <>
+              <Episode episode={episodes[0]} />
+              <p>
+                <Link to={'/podcast/'}>More Episodes</Link>
+              </p>
+            </>
+          )}
+        </Await>
+      </Suspense>
     </>
   );
 }

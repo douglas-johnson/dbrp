@@ -1,5 +1,5 @@
 import {flattenConnection} from '@shopify/hydrogen';
-import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import type {Route} from './+types/($locale).[sitemap.xml]';
 import type {SitemapQuery} from 'storefrontapi.generated';
 
 /**
@@ -22,7 +22,7 @@ type Entry = {
 export async function loader({
   request,
   context: {storefront},
-}: LoaderFunctionArgs) {
+}: Route.LoaderArgs) {
   const data = await storefront.query(SITEMAP_QUERY, {
     variables: {
       urlLimits: MAX_URLS,
