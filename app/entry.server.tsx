@@ -1,14 +1,18 @@
-import type {EntryContext} from '@shopify/remix-oxygen';
-import { ServerRouter } from 'react-router';
+import type {EntryContext} from 'react-router';
+import {ServerRouter} from 'react-router';
 import isbot from 'isbot';
 import {renderToReadableStream} from 'react-dom/server';
-import {createContentSecurityPolicy} from '@shopify/hydrogen';
+import {
+  createContentSecurityPolicy,
+  type HydrogenRouterContextProvider,
+} from '@shopify/hydrogen';
 
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   reactRouterContext: EntryContext,
+  context: HydrogenRouterContextProvider,
 ) {
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     // allow images served by megaphone via imgix.
@@ -17,7 +21,11 @@ export default async function handleRequest(
 
   const body = await renderToReadableStream(
     <NonceProvider>
-      <ServerRouter nonce={nonce} context={reactRouterContext} url={request.url} />
+      <ServerRouter
+        nonce={nonce}
+        context={reactRouterContext}
+        url={request.url}
+      />
     </NonceProvider>,
     {
       nonce,
