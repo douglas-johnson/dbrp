@@ -1,11 +1,14 @@
-import { useMatches } from 'react-router';
-import type {SerializeFrom} from '@shopify/remix-oxygen';
-import type {loader} from '~/root';
+import {useRouteLoaderData} from 'react-router';
+import type {RootLoader} from '~/root';
 
 /**
  * Access the result of the root loader from a React component.
+ * The root loader always runs for rendered routes, so missing data is a bug.
  */
 export function useRootLoaderData() {
-  const [root] = useMatches();
-  return root?.data as SerializeFrom<typeof loader>;
+  const data = useRouteLoaderData<RootLoader>('root');
+  if (!data) {
+    throw new Error('Root loader data is not available');
+  }
+  return data;
 }
