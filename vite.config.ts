@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import {defineConfig} from 'vite';
 import {hydrogen} from '@shopify/hydrogen/vite';
 import {oxygen} from '@shopify/mini-oxygen/vite';

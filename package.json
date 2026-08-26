@@ -11,7 +11,9 @@
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
     "typecheck": "tsc --noEmit",
     "codegen": "shopify hydrogen codegen",
-    "deploy": "npx shopify hydrogen deploy"
+    "deploy": "npx shopify hydrogen deploy",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
@@ -45,7 +47,19 @@
     "prettier": "^2.8.4",
     "typescript": "^5.2.2",
     "vite": "^8.2.1",
-    "vite-tsconfig-paths": "^4.3.1"
+    "vite-tsconfig-paths": "^4.3.1",
+    "storybook": "^10.5.9",
+    "@storybook/react-vite": "^10.5.9",
+    "@chromatic-com/storybook": "latest",
+    "@storybook/addon-vitest": "^10.5.9",
+    "@storybook/addon-a11y": "^10.5.9",
+    "@storybook/addon-docs": "^10.5.9",
+    "@storybook/addon-mcp": "latest",
+    "eslint-plugin-storybook": "^10.5.9",
+    "vitest": "latest",
+    "playwright": "latest",
+    "@vitest/browser-playwright": "latest",
+    "@vitest/coverage-v8": "latest"
   },
   "engines": {
     "node": ">=18.0.0"
