@@ -10,3 +10,6 @@ node_modules
 .hydrogen
 .vscode
 .react-router/
+stories
+*storybook.log
+storybook-static
