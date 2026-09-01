@@ -31,6 +31,9 @@ import type {
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import NavContext from '~/modules/nav-context';
 
+import Button from '~/components/button/Button';
+import clsx from 'clsx';
+
 export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Dad Bod Rap Pod | ${data?.product.title ?? ''}`}];
 };
@@ -228,18 +231,16 @@ function ProductForm({
                 } = value;
 
                 return (
-                  <button
+                  <Button
                     type="button"
-                    className={`product-options-item${
-                      exists && !selected ? ' link' : ''
-                    }`}
+                    className={clsx(
+                      'button',
+                      'product-options-item',
+                      {'is-selectable': exists && !selected},
+                      {'is-selected': selected},
+                      {'is-unavailable': !available},
+                    )}
                     key={option.name + name}
-                    style={{
-                      border: selected
-                        ? '1px solid black'
-                        : '1px solid transparent',
-                      opacity: available ? 1 : 0.3,
-                    }}
                     disabled={!exists}
                     onClick={() => {
                       if (!selected) {
@@ -251,7 +252,7 @@ function ProductForm({
                     }}
                   >
                     <ProductOptionSwatch swatch={swatch} name={name} />
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -328,13 +329,14 @@ export function AddToCartButton({
             type="hidden"
             value={JSON.stringify(analytics)}
           />
-          <button
+          <Button
+            className="button is-primary"
             type="submit"
             onClick={onClick}
             disabled={disabled ?? fetcher.state !== 'idle'}
           >
             {children}
-          </button>
+          </Button>
         </>
       )}
     </CartForm>
