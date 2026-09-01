@@ -1,5 +1,7 @@
-export type buttonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+import clsx from 'clsx';
 
-export default function Button(props: buttonProps) {
-  return <button {...props} />;
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+export default function Button(props: ButtonProps) {
+  return <button {...props} className={clsx('button', props.className)} />;
 }
