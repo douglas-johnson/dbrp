@@ -22,28 +22,28 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    className: 'button',
+    className: '',
     children: 'Hello Button',
   },
 };
 
 export const Primary: Story = {
   args: {
-    className: 'button is-primary',
+    className: 'is-primary',
     children: 'Hello Button',
   },
 };
 
 export const Transparent: Story = {
   args: {
-    className: 'button is-transparent',
+    className: 'is-transparent',
     children: 'Hello Transparent Button',
   },
 };
 
 export const Icon: Story = {
   args: {
-    className: 'button is-transparent is-icon',
+    className: 'is-transparent is-icon',
     children: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -59,28 +59,28 @@ export const Icon: Story = {
 
 export const ProductOption: Story = {
   args: {
-    className: 'button product-options-item',
+    className: 'product-options-item',
     children: 'SM',
   },
 };
 
-export const ProductOptionLink: Story = {
+export const ProductOptionSelectable: Story = {
   args: {
-    className: 'button product-options-item is-selectable',
+    className: 'product-options-item is-selectable',
     children: 'SM',
   },
 };
 
 export const ProductOptionSelected: Story = {
   args: {
-    className: 'button product-options-item is-selected',
+    className: 'product-options-item is-selected',
     children: 'SM',
   },
 };
 
 export const ProductOptionUnavailable: Story = {
   args: {
-    className: 'button product-options-item is-unavailable',
+    className: 'product-options-item is-unavailable',
     children: 'SM',
   },
 };

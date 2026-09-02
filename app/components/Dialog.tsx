@@ -12,7 +12,7 @@ function Dialog({children}: DialogProps, ref: ForwardedRef<HTMLDialogElement>) {
     <dialog className="dbrp-dialog" ref={ref}>
       <div className="dbrp-dialog-header">
         <Button
-          className="button is-transparent is-icon"
+          className="is-transparent is-icon"
           type="button"
           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e?.currentTarget?.closest('dialog')?.close();

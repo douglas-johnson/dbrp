@@ -1,7 +1,11 @@
-import { Link, Form, useParams, useFetcher, type FormProps } from 'react-router';
+import {Link, Form, useParams, useFetcher, type FormProps} from 'react-router';
 import {Image, Money, Pagination} from '@shopify/hydrogen';
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useContext} from 'react';
 import {applyTrackingParams} from '~/lib/search';
+
+import Button from './button/Button';
+
+import NavContext from '~/modules/nav-context';
 
 import type {
   PredictiveProductFragment,
@@ -91,7 +95,7 @@ export function SearchForm({searchTerm}: {searchTerm: string}) {
         type="search"
       />
       &nbsp;
-      <button type="submit">Search</button>
+      <Button type="submit">Search</Button>
     </Form>
   );
 }
@@ -234,7 +238,10 @@ function SearchResultArticleGrid({articles}: Pick<SearchQuery, 'articles'>) {
       <div>
         {articles?.nodes?.map((article) => (
           <div className="search-results-item" key={article.id}>
-            <Link prefetch="intent" to={`/blogs/${article.blog.handle}/${article.handle}`}>
+            <Link
+              prefetch="intent"
+              to={`/blogs/${article.blog.handle}/${article.handle}`}
+            >
               {article.title}
             </Link>
           </div>
@@ -318,14 +325,14 @@ export function PredictiveSearchResults() {
   const {results, totalResults, searchInputRef, searchTerm, state} =
     usePredictiveSearch();
 
+  const useableNavContext = useContext(NavContext);
+
   function goToSearchResult(event: React.MouseEvent<HTMLAnchorElement>) {
     if (!searchInputRef.current) return;
     searchInputRef.current.blur();
     searchInputRef.current.value = '';
-    // close the aside
-    // window.location.href = event.currentTarget.href;
-
-	// update this to close the dialog
+    // close the dialog.
+    useableNavContext?.search?.current?.close();
   }
 
   if (state === 'loading') {

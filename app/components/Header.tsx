@@ -167,7 +167,7 @@ function HeaderMenuMobileToggle() {
   return (
     <Button
       type="button"
-      className="button is-transparent is-icon"
+      className="is-transparent is-icon"
       onClick={() => useableNavContext?.menu?.current?.showModal()}
     >
       <svg
@@ -188,7 +188,7 @@ function SearchToggle() {
   return (
     <Button
       type="button"
-      className="button is-transparent is-icon"
+      className="is-transparent is-icon"
       onClick={() => useableNavContext?.search?.current?.showModal()}
     >
       <svg
@@ -212,7 +212,7 @@ function CartBadge({count}: {count: number}) {
   return (
     <Button
       type="button"
-      className="button is-transparent is-icon"
+      className="is-transparent is-icon"
       onClick={() => useableNavContext?.cart?.current?.showModal()}
     >
       <svg

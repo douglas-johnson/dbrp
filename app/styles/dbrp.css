@@ -301,6 +301,10 @@
     cursor: pointer;
   }
 
+  .button:disabled {
+    opacity: 0.3;
+  }
+
   .button.is-transparent {
     border-color: transparent;
     box-shadow: none;

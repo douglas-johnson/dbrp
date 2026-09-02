@@ -234,7 +234,6 @@ function ProductForm({
                   <Button
                     type="button"
                     className={clsx(
-                      'button',
                       'product-options-item',
                       {'is-selectable': exists && !selected},
                       {'is-selected': selected},
@@ -330,7 +329,7 @@ export function AddToCartButton({
             value={JSON.stringify(analytics)}
           />
           <Button
-            className="button is-primary"
+            className="is-primary"
             type="submit"
             onClick={onClick}
             disabled={disabled ?? fetcher.state !== 'idle'}
