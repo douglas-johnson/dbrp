@@ -433,6 +433,9 @@ const PRODUCT_FRAGMENT = `#graphql
         }
       }  
     }
+    hideLowStockMessage: metafield(namespace: "custom", key: "hide_low_stock_message") {
+        value
+    }
   }
   ${PRODUCT_VARIANT_FRAGMENT}
 ` as const;
