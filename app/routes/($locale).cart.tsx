@@ -61,7 +61,7 @@ export async function action({request, context}: Route.ActionArgs) {
 
   const cartId = result.cart.id;
   const headers = cart.setCartId(result.cart.id);
-  const {cart: cartResult, errors} = result;
+  const {cart: cartResult, errors, warnings} = result;
 
   const redirectTo = formData.get('redirectTo') ?? null;
   if (typeof redirectTo === 'string') {
@@ -75,6 +75,7 @@ export async function action({request, context}: Route.ActionArgs) {
     {
       cart: cartResult,
       errors,
+      warnings,
       analytics: {
         cartId,
       },

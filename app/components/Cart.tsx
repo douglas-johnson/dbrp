@@ -1,10 +1,15 @@
 import {CartForm, Image, Money} from '@shopify/hydrogen';
-import type {CartLineUpdateInput} from '@shopify/hydrogen/storefront-api-types';
-import {Link} from 'react-router';
+import type {
+  CartLineUpdateInput,
+  CartWarning,
+} from '@shopify/hydrogen/storefront-api-types';
+import {FetcherWithComponents, Link, useFetcher} from 'react-router';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
-import {useVariantUrl} from '~/lib/variants';
+import {useContext} from 'react';
 
+import {useVariantUrl} from '~/lib/variants';
 import Button from './button/Button';
+import NavContext from '~/modules/nav-context';
 
 type CartLine = CartApiQueryFragment['lines']['nodes'][0];
 
@@ -74,7 +79,7 @@ function CartLineItem({
   const {id, merchandise} = line;
   const {product, title, image, selectedOptions} = merchandise;
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
-
+  const useableNavContext = useContext(NavContext);
   return (
     <li key={id} className="cart-line">
       {image && (
@@ -99,10 +104,8 @@ function CartLineItem({
               prefetch="intent"
               to={lineItemUrl}
               onClick={() => {
-                if (layout === 'aside') {
-                  // close the drawer
-                  window.location.href = lineItemUrl;
-                }
+                // close the dialog.
+                useableNavContext?.cart?.current?.close();
               }}
             >
               {product.title}{' '}
@@ -197,7 +200,11 @@ function CartLineRemoveButton({lineIds}: {lineIds: string[]}) {
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{lineIds}}
     >
-      <Button type="submit">Remove</Button>
+      {(fetcher: FetcherWithComponents<any>) => (
+        <Button disabled={fetcher.state !== 'idle'} type="submit">
+          Remove
+        </Button>
+      )}
     </CartForm>
   );
 }
@@ -207,33 +214,57 @@ function CartLineQuantity({line}: {line: CartLine}) {
   const {id: lineId, quantity} = line;
   const prevQuantity = Number(Math.max(0, quantity - 1).toFixed(0));
   const nextQuantity = Number((quantity + 1).toFixed(0));
+  const maxQuantity = line.merchandise.quantityAvailable;
+
+  const increaseFetcher = useFetcher<{warnings?: CartWarning[]}>({
+    key: `line-increase-${lineId}`,
+  });
+  const warning = increaseFetcher.data?.warnings?.[0];
 
   return (
-    <div className="cart-line-quantity">
-      <small>Quantity: {quantity} </small>
-      <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
-        <Button
-          aria-label="Decrease quantity"
-          disabled={quantity <= 1}
-          name="decrease-quantity"
-          value={prevQuantity}
-        >
-          <span>&#8722; </span>
-        </Button>
-      </CartLineUpdateButton>
+    <>
+      <div className="cart-line-quantity">
+        <small>Quantity: {quantity} </small>
+        <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
+          {(fetcher: FetcherWithComponents<any>) => (
+            <Button
+              aria-label="Decrease quantity"
+              disabled={quantity <= 1 || fetcher.state !== 'idle'}
+              name="decrease-quantity"
+              value={prevQuantity}
+            >
+              <span>&#8722; </span>
+            </Button>
+          )}
+        </CartLineUpdateButton>
 
-      <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
-        <Button
-          aria-label="Increase quantity"
-          name="increase-quantity"
-          value={nextQuantity}
+        <CartLineUpdateButton
+          fetcherKey={`line-increase-${lineId}`}
+          lines={[{id: lineId, quantity: nextQuantity}]}
         >
-          <span>&#43;</span>
-        </Button>
-      </CartLineUpdateButton>
+          {(fetcher: FetcherWithComponents<any>) => (
+            <Button
+              aria-label="Increase quantity"
+              disabled={
+                fetcher.state !== 'idle' ||
+                (typeof maxQuantity === 'number' && nextQuantity > maxQuantity)
+              }
+              name="increase-quantity"
+              value={nextQuantity}
+            >
+              <span>&#43;</span>
+            </Button>
+          )}
+        </CartLineUpdateButton>
 
-      <CartLineRemoveButton lineIds={[lineId]} />
-    </div>
+        <CartLineRemoveButton lineIds={[lineId]} />
+      </div>
+      {warning && (
+        <small className="cart-line-warning" role="alert">
+          {warning.message}
+        </small>
+      )}
+    </>
   );
 }
 
@@ -354,15 +385,20 @@ function UpdateDiscountForm({
 function CartLineUpdateButton({
   children,
   lines,
+  fetcherKey,
 }: {
-  children: React.ReactNode;
+  children:
+    | React.ReactNode
+    | ((fetcher: FetcherWithComponents<any>) => React.ReactNode);
   lines: CartLineUpdateInput[];
+  fetcherKey?: string;
 }) {
   return (
     <CartForm
       route="/cart"
       action={CartForm.ACTIONS.LinesUpdate}
       inputs={{lines}}
+      fetcherKey={fetcherKey}
     >
       {children}
     </CartForm>
