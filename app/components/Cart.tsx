@@ -4,6 +4,8 @@ import {Link} from 'react-router';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
 
+import Button from './button/Button';
+
 type CartLine = CartApiQueryFragment['lines']['nodes'][0];
 
 type CartMainProps = {
@@ -195,7 +197,7 @@ function CartLineRemoveButton({lineIds}: {lineIds: string[]}) {
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{lineIds}}
     >
-      <button type="submit">Remove</button>
+      <Button type="submit">Remove</Button>
     </CartForm>
   );
 }
@@ -210,26 +212,26 @@ function CartLineQuantity({line}: {line: CartLine}) {
     <div className="cart-line-quantity">
       <small>Quantity: {quantity} </small>
       <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
-        <button
+        <Button
           aria-label="Decrease quantity"
           disabled={quantity <= 1}
           name="decrease-quantity"
           value={prevQuantity}
         >
           <span>&#8722; </span>
-        </button>
+        </Button>
       </CartLineUpdateButton>
-     
+
       <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
-        <button
+        <Button
           aria-label="Increase quantity"
           name="increase-quantity"
           value={nextQuantity}
         >
           <span>&#43;</span>
-        </button>
+        </Button>
       </CartLineUpdateButton>
-      
+
       <CartLineRemoveButton lineIds={[lineId]} />
     </div>
   );
@@ -311,7 +313,7 @@ function CartDiscounts({
             <div className="cart-discount">
               <code>{codes?.join(', ')}</code>
               &nbsp;
-              <button>Remove</button>
+              <Button>Remove</Button>
             </div>
           </UpdateDiscountForm>
         </div>
@@ -322,7 +324,7 @@ function CartDiscounts({
         <div>
           <input type="text" name="discountCode" placeholder="Discount code" />
           &nbsp;
-          <button type="submit">Apply</button>
+          <Button type="submit">Apply</Button>
         </div>
       </UpdateDiscountForm>
     </div>
