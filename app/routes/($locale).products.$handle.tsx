@@ -32,6 +32,7 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import NavContext from '~/modules/nav-context';
 
 import Button from '~/components/button/Button';
+import LowStockMessage from '~/components/low-stock-message/LowStockMessage';
 import clsx from 'clsx';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -164,6 +165,7 @@ function ProductMain({
       <ProductForm
         productOptions={productOptions}
         selectedVariant={selectedVariant}
+        hideLowStockMessage={product.hideLowStockMessage?.value === 'true'}
       />
       <p>
         <strong>Description</strong>
@@ -204,9 +206,11 @@ export function ProductPrice({
 function ProductForm({
   productOptions,
   selectedVariant,
+  hideLowStockMessage,
 }: {
   productOptions: MappedProductOptions[];
   selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
+  hideLowStockMessage: boolean;
 }) {
   const navigate = useNavigate();
   const useableNavContext = useContext(NavContext);
@@ -258,6 +262,11 @@ function ProductForm({
           </div>
         );
       })}
+      {!hideLowStockMessage && (
+        <LowStockMessage
+          quantityAvailable={selectedVariant?.quantityAvailable}
+        />
+      )}
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
@@ -345,6 +354,7 @@ export function AddToCartButton({
 const PRODUCT_VARIANT_FRAGMENT = `#graphql
   fragment ProductVariant on ProductVariant {
     availableForSale
+    quantityAvailable
     compareAtPrice {
       amount
       currencyCode
@@ -358,7 +368,6 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
       width
       height
     }
-
     price {
       amount
       currencyCode
@@ -417,7 +426,7 @@ const PRODUCT_FRAGMENT = `#graphql
       description
       title
     }
-	media(first:10) {
+    media(first:10) {
       edges {
         node {
           ... on MediaImage {
