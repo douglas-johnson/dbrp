@@ -3,6 +3,10 @@ import type {Maybe} from '@shopify/hydrogen/storefront-api-types';
 
 export const DEFAULT_LOW_STOCK_THRESHOLD = 4;
 
+/**
+ * Low Stock Message
+ * Uses shop-level meta data low_stock_threshold.
+ */
 export default function LowStockMessage({
   quantityAvailable,
 }: {
