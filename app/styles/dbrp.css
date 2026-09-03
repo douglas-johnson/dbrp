@@ -274,6 +274,10 @@
     margin-inline-start: auto;
   }
 
+  .cart-line-warning {
+    display: block;
+  }
+
   .cart-subtotal {
     display: grid;
     grid-template-columns: 1fr min-content;

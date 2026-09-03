@@ -239,6 +239,9 @@ const HEADER_QUERY = `#graphql
         }
       }
     }
+	lowStockThreshold: metafield(namespace: "custom", key: "low_stock_threshold") {
+    	value
+  	}	  
   }
   query Header(
     $country: CountryCode
