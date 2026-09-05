@@ -1,10 +1,13 @@
 import {Await, Link} from 'react-router';
-import React, {Suspense} from 'react';
+import {Image, Money} from '@shopify/hydrogen';
+import React, {Suspense, useRef, useContext} from 'react';
 import type {
   CartApiQueryFragment,
   FooterQuery,
   HeaderQuery,
+  RecommendedProductsQuery,
 } from 'storefrontapi.generated';
+
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/Cart';
@@ -12,19 +15,9 @@ import {
   PredictiveSearchForm,
   PredictiveSearchResults,
 } from '~/components/Search';
-
-import {Image, Money} from '@shopify/hydrogen';
-
-import type {
-  // FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
-
-import {useRef, useContext} from 'react';
 import Dialog from '~/components/Dialog';
-
 import NavContext from '~/modules/nav-context';
-import Button from './button/Button';
+import Button from '~/components/button/Button';
 
 export type LayoutProps = {
   cart: Promise<CartApiQueryFragment | null>;
@@ -98,6 +91,7 @@ function RecommendedProducts({
                       <Image
                         data={product.images.nodes[0]}
                         sizes="(min-width: 45em) 20vw, 50vw"
+                        aspectRatio="1/1"
                       />
                     </Link>
                   </div>

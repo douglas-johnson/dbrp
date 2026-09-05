@@ -17,11 +17,6 @@ import appStyles from './styles/app.css?url';
 import dbrpStyles from './styles/dbrp.css?url';
 import {Layout} from '~/components/Layout';
 
-import type {
-  // FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
-
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
  */
