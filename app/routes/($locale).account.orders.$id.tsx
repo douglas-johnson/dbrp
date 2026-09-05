@@ -6,8 +6,8 @@ import {CUSTOMER_ORDER_QUERY} from '~/graphql/customer-account/CustomerOrderQuer
 
 import type {Route} from './+types/($locale).account.orders.$id';
 
-export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Order ${data?.order?.name}`}];
+export const meta: Route.MetaFunction = ({loaderData}) => {
+  return [{title: `Order ${loaderData?.order?.name}`}];
 };
 
 export async function loader({params, context, request}: Route.LoaderArgs) {

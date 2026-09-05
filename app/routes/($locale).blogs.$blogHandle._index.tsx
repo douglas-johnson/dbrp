@@ -4,8 +4,8 @@ import type {ArticleItemFragment} from 'storefrontapi.generated';
 
 import type {Route} from './+types/($locale).blogs.$blogHandle._index';
 
-export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Dad Bod Rap Pod | ${data?.blog.title ?? ''} blog`}];
+export const meta: Route.MetaFunction = ({loaderData}) => {
+  return [{title: `Dad Bod Rap Pod | ${loaderData?.blog.title ?? ''} blog`}];
 };
 
 export async function loader({

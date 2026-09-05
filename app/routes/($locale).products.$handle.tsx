@@ -35,8 +35,8 @@ import Button from '~/components/button/Button';
 import LowStockMessage from '~/components/low-stock-message/LowStockMessage';
 import clsx from 'clsx';
 
-export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Dad Bod Rap Pod | ${data?.product.title ?? ''}`}];
+export const meta: Route.MetaFunction = ({loaderData}) => {
+  return [{title: `Dad Bod Rap Pod | ${loaderData?.product.title ?? ''}`}];
 };
 
 export async function loader(args: Route.LoaderArgs) {

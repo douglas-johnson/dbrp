@@ -1,8 +1,8 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).pages.$handle';
 
-export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Dad Bod Rap Pod | ${data?.page.title ?? ''}`}];
+export const meta: Route.MetaFunction = ({loaderData}) => {
+  return [{title: `Dad Bod Rap Pod | ${loaderData?.page.title ?? ''}`}];
 };
 
 export async function loader({params, context}: Route.LoaderArgs) {

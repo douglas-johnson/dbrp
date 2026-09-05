@@ -10,9 +10,13 @@ import type {ProductItemFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
 import type {Route} from './+types/($locale).collections.$handle';
 
-export const meta: Route.MetaFunction = ({data}) => {
+export const meta: Route.MetaFunction = ({loaderData}) => {
   return [
-    {title: `Dad Bod Rap Pod | ${data?.collection.title ?? ''} Collection`},
+    {
+      title: `Dad Bod Rap Pod | ${
+        loaderData?.collection.title ?? ''
+      } Collection`,
+    },
   ];
 };
 
