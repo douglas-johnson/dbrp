@@ -221,19 +221,24 @@
   }
 
   .recommended-products {
+    container-name: recommendedProducts;
+    container-type: inline-size;
   }
 
   .recommended-products-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     row-gap: 1em;
+  }
+
+  /* 31.5em = (child flex-basis + column-gap) * 1.5 */
+  @container recommendedProducts ( width >= 31.5em ) {
+    .recommended-products-grid {
+      grid-template-columns: 50% 50%;
+    }
   }
 
   .recommended-product {
     padding: 1em;
-    flex-basis: 20em;
-    flex-grow: 1;
-
     display: flex;
     flex-wrap: wrap;
     column-gap: 1em;
