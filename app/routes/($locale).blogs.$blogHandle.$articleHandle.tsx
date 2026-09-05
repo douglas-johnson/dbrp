@@ -3,8 +3,8 @@ import {Image} from '@shopify/hydrogen';
 
 import type {Route} from './+types/($locale).blogs.$blogHandle.$articleHandle';
 
-export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `${data?.article.title ?? ''} | Dad Bod Rap Pod`}];
+export const meta: Route.MetaFunction = ({loaderData}) => {
+  return [{title: `${loaderData?.article.title ?? ''} | Dad Bod Rap Pod`}];
 };
 
 export async function loader({params, context}: Route.LoaderArgs) {
