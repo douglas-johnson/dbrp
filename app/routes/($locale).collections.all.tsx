@@ -76,26 +76,27 @@ function ProductItem({
   const variant = product.variants.nodes[0];
   const variantUrl = useVariantUrl(product.handle, variant.selectedOptions);
   return (
-    <Link
-      className="product-item"
-      key={product.id}
-      prefetch="intent"
-      to={variantUrl}
-    >
+    <article>
       {product.featuredImage && (
-        <Image
-          alt={product.featuredImage.altText || product.title}
-          aspectRatio="1/1"
-          data={product.featuredImage}
-          loading={loading}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
+        <Link prefetch="intent" to={variantUrl}>
+          <Image
+            alt={product.featuredImage.altText || product.title}
+            aspectRatio="1/1"
+            data={product.featuredImage}
+            loading={loading}
+            sizes="(min-width: 45em) 400px, 100vw"
+          />
+        </Link>
       )}
-      <h4>{product.title}</h4>
-      <small>
+      <h4>
+        <Link prefetch="intent" to={variantUrl}>
+          {product.title}
+        </Link>
+      </h4>
+      <p>
         <Money data={product.priceRange.minVariantPrice} />
-      </small>
-    </Link>
+      </p>
+    </article>
   );
 }
 
