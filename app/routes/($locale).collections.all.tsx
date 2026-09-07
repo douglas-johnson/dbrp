@@ -9,6 +9,8 @@ import type {ProductItemFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
 import type {Route} from './+types/($locale).collections.all';
 
+import Heading from '~/components/heading/Heading';
+
 export const meta: Route.MetaFunction = () => {
   return [{title: `Dad Bod Rap Pod | Products`}];
 };
@@ -30,19 +32,33 @@ export default function Collection() {
   const {products} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <h1>Products</h1>
+    <div className="collection rhythm">
+      <Heading>Products</Heading>
       <Pagination connection={products}>
-        {({nodes, isLoading, PreviousLink, NextLink}) => (
+        {({
+          nodes,
+          isLoading,
+          PreviousLink,
+          NextLink,
+          hasPreviousPage,
+          hasNextPage,
+        }) => (
           <>
-            <PreviousLink>
-              {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
-            </PreviousLink>
+            {hasPreviousPage && (
+              <div style={{textAlign: 'center'}}>
+                <PreviousLink>
+                  {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
+                </PreviousLink>
+              </div>
+            )}
             <ProductsGrid products={nodes} />
-            <br />
-            <NextLink>
-              {isLoading ? 'Loading...' : <span>Load more ↓</span>}
-            </NextLink>
+            {hasNextPage && (
+              <div style={{textAlign: 'center'}}>
+                <NextLink>
+                  {isLoading ? 'Loading...' : <span>Load more ↓</span>}
+                </NextLink>
+              </div>
+            )}
           </>
         )}
       </Pagination>
@@ -76,26 +92,27 @@ function ProductItem({
   const variant = product.variants.nodes[0];
   const variantUrl = useVariantUrl(product.handle, variant.selectedOptions);
   return (
-    <Link
-      className="product-item"
-      key={product.id}
-      prefetch="intent"
-      to={variantUrl}
-    >
+    <article className="products-grid-item">
       {product.featuredImage && (
-        <Image
-          alt={product.featuredImage.altText || product.title}
-          aspectRatio="1/1"
-          data={product.featuredImage}
-          loading={loading}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
+        <Link prefetch="intent" to={variantUrl}>
+          <Image
+            alt={product.featuredImage.altText || product.title}
+            aspectRatio="1/1"
+            data={product.featuredImage}
+            loading={loading}
+            sizes="(max-width: 32em) 92.5vw, 32em"
+          />
+        </Link>
       )}
-      <h4>{product.title}</h4>
-      <small>
+      <Heading level={2} style={{fontSize: 'var(--font-size-step-3)'}}>
+        <Link prefetch="intent" to={variantUrl}>
+          {product.title}
+        </Link>
+      </Heading>
+      <p>
         <Money data={product.priceRange.minVariantPrice} />
-      </small>
-    </Link>
+      </p>
+    </article>
   );
 }
 
@@ -144,7 +161,7 @@ const CATALOG_QUERY = `#graphql
     $startCursor: String
     $endCursor: String
   ) @inContext(country: $country, language: $language) {
-    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
+    products(first: $first, last: $last, before: $startCursor, after: $endCursor, sortKey: CREATED_AT, reverse: true) {
       nodes {
         ...ProductItem
       }
