@@ -32,8 +32,8 @@ export default function Collection() {
   const {products} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <h1>Products</h1>
+    <div className="collection rhythm">
+      <Heading>Products</Heading>
       <Pagination connection={products}>
         {({
           nodes,
@@ -92,7 +92,7 @@ function ProductItem({
   const variant = product.variants.nodes[0];
   const variantUrl = useVariantUrl(product.handle, variant.selectedOptions);
   return (
-    <article>
+    <article className="products-grid-item">
       {product.featuredImage && (
         <Link prefetch="intent" to={variantUrl}>
           <Image
@@ -100,11 +100,11 @@ function ProductItem({
             aspectRatio="1/1"
             data={product.featuredImage}
             loading={loading}
-            sizes="(min-width: 45em) 400px, 100vw"
+            sizes="(max-width: 32em) 92.5vw, 32em"
           />
         </Link>
       )}
-      <Heading level={2}>
+      <Heading level={2} style={{fontSize: 'var(--font-size-step-3)'}}>
         <Link prefetch="intent" to={variantUrl}>
           {product.title}
         </Link>
