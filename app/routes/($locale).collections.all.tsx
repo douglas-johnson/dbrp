@@ -35,16 +35,30 @@ export default function Collection() {
     <div className="collection">
       <h1>Products</h1>
       <Pagination connection={products}>
-        {({nodes, isLoading, PreviousLink, NextLink}) => (
+        {({
+          nodes,
+          isLoading,
+          PreviousLink,
+          NextLink,
+          hasPreviousPage,
+          hasNextPage,
+        }) => (
           <>
-            <PreviousLink>
-              {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
-            </PreviousLink>
+            {hasPreviousPage && (
+              <div style={{textAlign: 'center'}}>
+                <PreviousLink>
+                  {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
+                </PreviousLink>
+              </div>
+            )}
             <ProductsGrid products={nodes} />
-            <br />
-            <NextLink>
-              {isLoading ? 'Loading...' : <span>Load more ↓</span>}
-            </NextLink>
+            {hasNextPage && (
+              <div style={{textAlign: 'center'}}>
+                <NextLink>
+                  {isLoading ? 'Loading...' : <span>Load more ↓</span>}
+                </NextLink>
+              </div>
+            )}
           </>
         )}
       </Pagination>
