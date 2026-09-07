@@ -9,6 +9,8 @@ import type {ProductItemFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
 import type {Route} from './+types/($locale).collections.all';
 
+import Heading from '~/components/heading/Heading';
+
 export const meta: Route.MetaFunction = () => {
   return [{title: `Dad Bod Rap Pod | Products`}];
 };
@@ -88,11 +90,11 @@ function ProductItem({
           />
         </Link>
       )}
-      <h4>
+      <Heading level={2}>
         <Link prefetch="intent" to={variantUrl}>
           {product.title}
         </Link>
-      </h4>
+      </Heading>
       <p>
         <Money data={product.priceRange.minVariantPrice} />
       </p>
