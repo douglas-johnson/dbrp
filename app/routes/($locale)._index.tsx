@@ -9,6 +9,7 @@ import type {
 
 import loadEpisodes from '~/modules/episodes/loadEpisodes';
 import Episode from '~/components/Episode';
+import Heading from '~/components/heading/Heading';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Dad Bod Rap Pod'}];
@@ -99,7 +100,9 @@ export default function Homepage() {
     <>
       {/* <FeaturedCollection collection={data.featuredCollection} /> */}
       {/* <RecommendedProducts products={data.recommendedProducts} /> */}
-      <h1>Dad Bod Rap Pod</h1>
+      <Heading headingLevel={1} className="has-wide-width">
+        Dad Bod Rap Pod
+      </Heading>
       <ul>
         <li>
           <a href="https://www.patreon.com/dadbodrappod">Join The Patreon</a>
@@ -132,7 +135,7 @@ export default function Homepage() {
         <Await resolve={data.episodeData}>
           {({episodes}) => (
             <>
-              <Episode episode={episodes[0]} />
+              <Episode episode={episodes[0]} headingLevel={3} />
               <p>
                 <Link to={'/podcast/'}>More Episodes</Link>
               </p>

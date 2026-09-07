@@ -3,6 +3,7 @@ import loadEpisodes from '~/modules/episodes/loadEpisodes';
 import {Suspense} from 'react';
 import Episode from '~/components/Episode';
 import type {Route} from './+types/($locale).podcast._index';
+import Heading from '~/components/heading/Heading';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: `Latest Podcast Episodes | Dad Bod Rap Pod`}];
@@ -19,7 +20,9 @@ export default function Podcast() {
   const {episodes} = data;
   return (
     <>
-      <h1>Podcast</h1>
+      <Heading headingLevel={1} className="has-wide-width">
+        Podcast
+      </Heading>
       {episodes.map((episode) => (
         <Episode key={episode.id} episode={episode} />
       ))}

@@ -32,8 +32,8 @@ export default function Collection() {
   const {products} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection rhythm">
-      <Heading>Products</Heading>
+    <>
+      <Heading className="has-wide-width">Products</Heading>
       <Pagination connection={products}>
         {({
           nodes,
@@ -62,13 +62,13 @@ export default function Collection() {
           </>
         )}
       </Pagination>
-    </div>
+    </>
   );
 }
 
 function ProductsGrid({products}: {products: ProductItemFragment[]}) {
   return (
-    <div className="products-grid">
+    <div className="dbrp-content-grid">
       {products.map((product, index) => {
         return (
           <ProductItem
@@ -104,7 +104,7 @@ function ProductItem({
           />
         </Link>
       )}
-      <Heading level={2} style={{fontSize: 'var(--font-size-step-3)'}}>
+      <Heading headingLevel={2} style={{fontSize: 'var(--font-size-step-3)'}}>
         <Link prefetch="intent" to={variantUrl}>
           {product.title}
         </Link>
