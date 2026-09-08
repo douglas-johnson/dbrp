@@ -100,10 +100,12 @@ export default function Homepage() {
     <>
       {/* <FeaturedCollection collection={data.featuredCollection} /> */}
       {/* <RecommendedProducts products={data.recommendedProducts} /> */}
-      <Heading headingLevel={1} className="has-wide-width dbrp-page-title">
-        Dad Bod Rap Pod
-      </Heading>
-      <ul>
+      <header className="has-wide-width">
+        <Heading headingLevel={1} className="dbrp-page-title">
+          DBRP
+        </Heading>
+      </header>
+      <menu>
         <li>
           <a href="https://www.patreon.com/dadbodrappod">Join The Patreon</a>
         </li>
@@ -115,7 +117,7 @@ export default function Homepage() {
         <li>
           <a href="https://feeds.megaphone.fm/dadbodrappod">RSS Feed</a>
         </li>
-      </ul>
+      </menu>
       <h2>News</h2>
       <Suspense fallback={<div>Loading latest blog post</div>}>
         <Await resolve={data.article}>
