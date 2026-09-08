@@ -4,6 +4,7 @@ import {Suspense} from 'react';
 import Episode from '~/components/Episode';
 
 import type {Route} from './+types/($locale).podcast.page.$page';
+import Heading from '~/components/heading/Heading';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: `Latest Podcast Episodes | Dad Bod Rap Pod`}];
@@ -23,13 +24,19 @@ export default function Podcast() {
   } = useLoaderData<typeof loader>();
   return (
     <>
-      <h1>Podcast</h1>
+      <header className="has-wide-width">
+        <Heading headingLevel={1} className="dbrp-page-title">
+          Podcast
+        </Heading>
+      </header>
       {episodes.map((episode) => (
         <Episode key={episode.id} episode={episode} />
       ))}
       {0 < nextPage && (
         <p>
-          <Link to={`/podcast/page/${nextPage}/`}>More Episodes</Link>
+          <Link to={`/podcast/page/${nextPage}/`}>
+            <strong>More Episodes</strong>
+          </Link>
         </p>
       )}
     </>

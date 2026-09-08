@@ -29,7 +29,9 @@ export default function Podcast() {
         <Episode key={episode.id} episode={episode} />
       ))}
       <p>
-        <Link to={'/podcast/page/2/'}>More Episodes</Link>
+        <Link to={'/podcast/page/2/'}>
+          <strong>More Episodes</strong>
+        </Link>
       </p>
     </>
   );

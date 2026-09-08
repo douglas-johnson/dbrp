@@ -139,7 +139,9 @@ export default function Homepage() {
             <>
               <Episode episode={episodes[0]} headingLevel={3} />
               <p>
-                <Link to={'/podcast/'}>More Episodes</Link>
+                <Link to={'/podcast/'}>
+                  <strong>More Episodes</strong>
+                </Link>
               </p>
             </>
           )}
