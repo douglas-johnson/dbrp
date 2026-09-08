@@ -23,7 +23,7 @@ export default function Episode({
   return (
     <article className="rhythm">
       <Heading headingLevel={headingLevel}>{episode.title}</Heading>
-      {episode.imageFile ? (
+      {episode.imageFile && (
         <figure>
           <Imgix
             attributes={{
@@ -37,8 +37,8 @@ export default function Episode({
             shouldCrop={true}
           />
         </figure>
-      ) : null}
-      <p>{episode.subtitle}</p>
+      )}
+      {episode.subtitle && <p>{episode.subtitle}</p>}
       <p>
         <Link
           to={`https://open.spotify.com/episode/${episode.spotifyIdentifier}`}
