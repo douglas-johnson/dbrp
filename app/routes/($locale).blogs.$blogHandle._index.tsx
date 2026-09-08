@@ -3,6 +3,7 @@ import {Image, Pagination, getPaginationVariables} from '@shopify/hydrogen';
 import type {ArticleItemFragment} from 'storefrontapi.generated';
 
 import type {Route} from './+types/($locale).blogs.$blogHandle._index';
+import Heading from '~/components/heading/Heading';
 
 export const meta: Route.MetaFunction = ({loaderData}) => {
   return [{title: `Dad Bod Rap Pod | ${loaderData?.blog.title ?? ''} blog`}];
@@ -40,9 +41,11 @@ export default function Blog() {
   const {articles} = blog;
 
   return (
-    <div className="blog">
-      <h1>{blog.title}</h1>
-      <div className="blog-grid">
+    <>
+      <header className="has-wide-width">
+        <Heading className="dbrp-page-title">{blog.title}</Heading>
+      </header>
+      <div>
         <Pagination connection={articles}>
           {({nodes, isLoading, PreviousLink, NextLink}) => {
             return (
@@ -67,7 +70,7 @@ export default function Blog() {
           }}
         </Pagination>
       </div>
-    </div>
+    </>
   );
 }
 

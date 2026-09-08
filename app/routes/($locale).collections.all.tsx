@@ -33,7 +33,9 @@ export default function Collection() {
 
   return (
     <>
-      <Heading className="has-wide-width">Products</Heading>
+      <header className="has-wide-width">
+        <Heading className="dbrp-page-title">Products</Heading>
+      </header>
       <Pagination connection={products}>
         {({
           nodes,

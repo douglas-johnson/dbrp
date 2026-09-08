@@ -20,13 +20,14 @@ export default function Podcast() {
   const {episodes} = data;
   return (
     <>
-      <Heading headingLevel={1} className="has-wide-width">
-        Podcast
-      </Heading>
+      <header className="has-wide-width">
+        <Heading headingLevel={1} className="dbrp-page-title">
+          Podcast
+        </Heading>
+      </header>
       {episodes.map((episode) => (
         <Episode key={episode.id} episode={episode} />
       ))}
-
       <p>
         <Link to={'/podcast/page/2/'}>More Episodes</Link>
       </p>

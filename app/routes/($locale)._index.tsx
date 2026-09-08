@@ -100,7 +100,7 @@ export default function Homepage() {
     <>
       {/* <FeaturedCollection collection={data.featuredCollection} /> */}
       {/* <RecommendedProducts products={data.recommendedProducts} /> */}
-      <Heading headingLevel={1} className="has-wide-width">
+      <Heading headingLevel={1} className="has-wide-width dbrp-page-title">
         Dad Bod Rap Pod
       </Heading>
       <ul>
