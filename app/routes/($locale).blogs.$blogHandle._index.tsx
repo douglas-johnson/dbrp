@@ -87,10 +87,10 @@ function ArticleItem({
     day: 'numeric',
   }).format(new Date(article.publishedAt!));
   return (
-    <div className="blog-article" key={article.id}>
-      <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
-        {article.image && (
-          <div className="blog-article-image">
+    <div className="blog-article rhythm" key={article.id}>
+      {article.image && (
+        <figure className="blog-article-image">
+          <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
             <Image
               alt={article.image.altText || article.title}
               aspectRatio="3/2"
@@ -98,11 +98,15 @@ function ArticleItem({
               loading={loading}
               sizes="(min-width: 768px) 50vw, 100vw"
             />
-          </div>
-        )}
-        <h3>{article.title}</h3>
-        <small>{publishedAt}</small>
-      </Link>
+          </Link>
+        </figure>
+      )}
+      <Heading headingLevel={2} style={{fontSize: 'var(--font-size-step-3)'}}>
+        <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
+          {article.title}
+        </Link>
+      </Heading>
+      <p>{publishedAt}</p>
     </div>
   );
 }
