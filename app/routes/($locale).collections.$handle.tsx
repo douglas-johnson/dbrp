@@ -9,6 +9,7 @@ import {
 import type {ProductItemFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
 import type {Route} from './+types/($locale).collections.$handle';
+import Heading from '~/components/heading/Heading';
 
 export const meta: Route.MetaFunction = ({loaderData}) => {
   return [
@@ -47,8 +48,10 @@ export default function Collection() {
   const {collection} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <h1>{collection.title}</h1>
+    <>
+      <header className="has-wide-width">
+        <Heading className="dbrp-page-title">{collection.title}</Heading>
+      </header>
       <p className="collection-description">{collection.description}</p>
       <Pagination connection={collection.products}>
         {({nodes, isLoading, PreviousLink, NextLink}) => (
@@ -64,13 +67,13 @@ export default function Collection() {
           </>
         )}
       </Pagination>
-    </div>
+    </>
   );
 }
 
 function ProductsGrid({products}: {products: ProductItemFragment[]}) {
   return (
-    <div className="products-grid">
+    <div className="dbrp-content-grid">
       {products.map((product, index) => {
         return (
           <ProductItem
@@ -94,26 +97,27 @@ function ProductItem({
   const variant = product.variants.nodes[0];
   const variantUrl = useVariantUrl(product.handle, variant.selectedOptions);
   return (
-    <Link
-      className="product-item"
-      key={product.id}
-      prefetch="intent"
-      to={variantUrl}
-    >
+    <article className="products-grid-item">
       {product.featuredImage && (
-        <Image
-          alt={product.featuredImage.altText || product.title}
-          aspectRatio="1/1"
-          data={product.featuredImage}
-          loading={loading}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
+        <Link prefetch="intent" to={variantUrl}>
+          <Image
+            alt={product.featuredImage.altText || product.title}
+            aspectRatio="1/1"
+            data={product.featuredImage}
+            loading={loading}
+            sizes="(max-width: 32em) 92.5vw, 32em"
+          />
+        </Link>
       )}
-      <h4>{product.title}</h4>
-      <small>
+      <Heading headingLevel={2} style={{fontSize: 'var(--font-size-step-3)'}}>
+        <Link prefetch="intent" to={variantUrl}>
+          {product.title}
+        </Link>
+      </Heading>
+      <p>
         <Money data={product.priceRange.minVariantPrice} />
-      </small>
-    </Link>
+      </p>
+    </article>
   );
 }
 
