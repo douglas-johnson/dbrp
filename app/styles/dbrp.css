@@ -226,16 +226,6 @@
   /**
    * Products Grid
    */
-  .products-grid {
-    display: grid;
-    grid-template-columns: 1fr min(32em, 100%) 1fr;
-    row-gap: 2lh;
-  }
-
-  .products-grid > * {
-    grid-column-start: 2;
-  }
-
   .products-grid-item {
     display: grid;
     row-gap: 1rem;
