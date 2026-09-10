@@ -391,7 +391,7 @@
    */
   .dbrp-page-title {
     border-bottom: 1px solid var(--color-border);
-    font-size: calc(1rem + 8cqi);
+    font-size: var(--font-size-step-p-1);
   }
 }
 
