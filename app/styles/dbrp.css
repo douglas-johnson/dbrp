@@ -113,6 +113,10 @@
 }
 
 @layer elements {
+  :root {
+    color-scheme: light;
+  }
+
   body {
     font-size: var(--font-scale);
     line-height: 1.5;
