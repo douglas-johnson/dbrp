@@ -3,6 +3,7 @@ import {Image, Pagination, getPaginationVariables} from '@shopify/hydrogen';
 import type {ArticleItemFragment} from 'storefrontapi.generated';
 
 import type {Route} from './+types/($locale).blogs.$blogHandle._index';
+import Heading from '~/components/heading/Heading';
 
 export const meta: Route.MetaFunction = ({loaderData}) => {
   return [{title: `Dad Bod Rap Pod | ${loaderData?.blog.title ?? ''} blog`}];
@@ -40,9 +41,11 @@ export default function Blog() {
   const {articles} = blog;
 
   return (
-    <div className="blog">
-      <h1>{blog.title}</h1>
-      <div className="blog-grid">
+    <>
+      <header className="has-wide-width">
+        <Heading className="dbrp-page-title">{blog.title}</Heading>
+      </header>
+      <div>
         <Pagination connection={articles}>
           {({nodes, isLoading, PreviousLink, NextLink}) => {
             return (
@@ -67,7 +70,7 @@ export default function Blog() {
           }}
         </Pagination>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -84,10 +87,10 @@ function ArticleItem({
     day: 'numeric',
   }).format(new Date(article.publishedAt!));
   return (
-    <div className="blog-article" key={article.id}>
-      <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
-        {article.image && (
-          <div className="blog-article-image">
+    <div className="blog-article rhythm" key={article.id}>
+      {article.image && (
+        <figure className="blog-article-image">
+          <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
             <Image
               alt={article.image.altText || article.title}
               aspectRatio="3/2"
@@ -95,11 +98,15 @@ function ArticleItem({
               loading={loading}
               sizes="(min-width: 768px) 50vw, 100vw"
             />
-          </div>
-        )}
-        <h3>{article.title}</h3>
-        <small>{publishedAt}</small>
-      </Link>
+          </Link>
+        </figure>
+      )}
+      <Heading headingLevel={2} style={{fontSize: 'var(--font-size-step-3)'}}>
+        <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
+          {article.title}
+        </Link>
+      </Heading>
+      <p>{publishedAt}</p>
     </div>
   );
 }

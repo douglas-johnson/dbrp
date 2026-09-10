@@ -1,5 +1,7 @@
+export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+
 export type HeadingProps = React.HTMLAttributes<HTMLHeadingElement> & {
-  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  headingLevel?: HeadingLevel;
 };
 
 /**
@@ -8,9 +10,9 @@ export type HeadingProps = React.HTMLAttributes<HTMLHeadingElement> & {
  * Component allowing heading level to be passed down through props.
  */
 export default function Heading({
-  level = 1,
+  headingLevel = 1,
   ...props
 }: HeadingProps): React.ReactNode {
-  const HeadingElement = `h${level}`;
+  const HeadingElement = `h${headingLevel}`;
   return <HeadingElement {...props} />;
 }

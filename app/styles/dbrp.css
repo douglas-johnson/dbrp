@@ -1,32 +1,6 @@
 @layer settings, elements,  site-layout, components, utilities;
 
-@layer settings {
-  :root {
-    --font-scale: max(1rem, 0.9375rem + 0.3125vw);
-    --brand-color-orange: #ed7143;
-    --brand-color-brown: #462113;
-
-    --font-size-step-n-2: 0.75em;
-    --font-size-step-n-1: 0.875em;
-    --font-size-step-0: var(--font-scale);
-    --font-size-step-1: 1.25em;
-    --font-size-step-2: 1.5em;
-    --font-size-step-3: 2em;
-    --font-size-step-4: 2.5em;
-    --font-size-step-5: 3em;
-    --font-size-step-6: 4em;
-
-    --line-height-step-n-4: 1.1;
-    --line-height-step-n-3: 1.2;
-    --line-height-step-n-2: 1.3;
-    --line-height-step-n-1: 1.4;
-    --line-height-step-0: 1.5;
-    --line-height-dynamic: calc(1em + 0.5rem);
-
-    --root-padding-inline: 3.75vw;
-    --root-padding-block: 3.75vw;
-  }
-}
+@import './tokens.css' layer(settings);
 
 @layer site-layout {
   /**
@@ -139,6 +113,10 @@
 }
 
 @layer elements {
+  :root {
+    color-scheme: light;
+  }
+
   body {
     font-size: var(--font-scale);
     line-height: 1.5;
@@ -175,11 +153,27 @@
   }
 
   h1 {
-    font-size: var(--font-size-step-6);
+    font-size: var(--font-size-step-5);
   }
 
   h2 {
-    font-size: var(--font-size-step-5);
+    font-size: var(--font-size-step-4);
+  }
+
+  h3 {
+    font-size: var(--font-size-step-2);
+  }
+
+  h4 {
+    font-size: var(--font-size-step-1);
+  }
+
+  h5 {
+    font-size: var(--font-size-step-0);
+  }
+
+  h6 {
+    font-size: var(--font-size-step-n-1);
   }
 }
 
@@ -220,23 +214,38 @@
   .dbrp-dialog-content {
   }
 
-  /**
-   * Products Grid
-   */
+  .dbrp-main {
+    container-type: inline-size;
+  }
 
   /**
-   * Products Grid
+   * Content Grid
    */
-  .products-grid {
+  .dbrp-content-grid {
     display: grid;
-    grid-template-columns: 1fr min(32em, 100%) 1fr;
-    row-gap: 2lh;
+    grid-template-columns: 3.75cqi 1fr 1fr min(36em, 92.5cqi) 1fr 1fr 3.75cqi;
   }
 
-  .products-grid > * {
-    grid-column-start: 2;
+  .dbrp-content-grid > * {
+    grid-column-start: 4;
   }
 
+  .dbrp-content-grid > .has-wide-width {
+    grid-column: 2 / 7;
+  }
+
+  .dbrp-content-grid > .has-full-width {
+    grid-column: 1 / 8;
+  }
+
+  .dbrp-content-grid .dbrp-content-grid {
+    grid-column: 1 / 8;
+    grid-template-columns: subgrid;
+  }
+
+  /**
+   * Products Grid
+   */
   .products-grid-item {
     display: grid;
     row-gap: 1rem;
@@ -386,6 +395,14 @@
   .product-options-item.is-unavailable {
     opacity: 0.3;
   }
+
+  /**
+   * Page Title
+   */
+  .dbrp-page-title {
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--font-size-step-p-1);
+  }
 }
 
 @layer utilities {
@@ -412,25 +429,11 @@
   }
 
   .color-scheme-light {
-    --color-bg-max: oklch(100% 0 250);
-    --color-bg: oklch(97.015% 0 327.897);
-    --color-bg-min: oklch(83.279% 0 250);
-    --color-border: oklch(51% 0 109.693);
-    --color-fg-min: oklch(44% 0 250);
-    --color-fg-secondary: oklch(33.6% 0 326.034);
-    --color-fg: oklch(21.123% 0 250);
-    --color-fg-max: oklch(0% 0 250);
+    color-scheme: light only;
   }
 
   .color-scheme-dark {
-    --color-bg-max: oklch(0% 0 250);
-    --color-bg: oklch(17% 0.012 250);
-    --color-bg-min: oklch(38% 0 250);
-    --color-border: oklch(65% 0 250);
-    --color-fg-min: oklch(75% 0 250);
-    --color-fg-secondary: oklch(88.5% 0 250);
-    --color-fg: oklch(97.015% 0 250);
-    --color-fg-max: oklch(100% 0 250);
+    color-scheme: dark only;
   }
 
   /**
@@ -438,6 +441,10 @@
    */
   .has-root-padding {
     padding-inline: var(--root-padding-inline, 3.75vw);
+    padding-block: var(--root-padding-block, 3.75vw);
+  }
+
+  .has-root-padding-block {
     padding-block: var(--root-padding-block, 3.75vw);
   }
 
