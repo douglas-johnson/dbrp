@@ -10,6 +10,8 @@ export default defineConfig({
     // Allow a strict Content-Security-Policy
     // withtout inlining assets as base64:
     assetsInlineLimit: 0,
+    // browsers with light-dark() support
+    cssTarget: ['chrome123', 'edge123', 'firefox120', 'safari17.5', 'ios17.5'],
   },
   ssr: {
     optimizeDeps: {
