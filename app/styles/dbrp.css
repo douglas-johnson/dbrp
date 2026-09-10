@@ -1,32 +1,6 @@
 @layer settings, elements,  site-layout, components, utilities;
 
-@layer settings {
-  :root {
-    --font-scale: max(1rem, 0.9375rem + 0.3125vw);
-    --brand-color-orange: #ed7143;
-    --brand-color-brown: #462113;
-
-    --font-size-step-n-2: 0.75em;
-    --font-size-step-n-1: 0.875em;
-    --font-size-step-0: var(--font-scale);
-    --font-size-step-1: 1.25em;
-    --font-size-step-2: 1.5em;
-    --font-size-step-3: 2em;
-    --font-size-step-4: 2.5em;
-    --font-size-step-5: 3em;
-    --font-size-step-6: 4em;
-
-    --line-height-step-n-4: 1.1;
-    --line-height-step-n-3: 1.2;
-    --line-height-step-n-2: 1.3;
-    --line-height-step-n-1: 1.4;
-    --line-height-step-0: 1.5;
-    --line-height-dynamic: calc(1em + 0.5rem);
-
-    --root-padding-inline: 3.75vw;
-    --root-padding-block: 3.75vw;
-  }
-}
+@import './tokens.css' layer(settings);
 
 @layer site-layout {
   /**
@@ -445,25 +419,11 @@
   }
 
   .color-scheme-light {
-    --color-bg-max: oklch(100% 0 250);
-    --color-bg: oklch(97.015% 0 327.897);
-    --color-bg-min: oklch(83.279% 0 250);
-    --color-border: oklch(51% 0 109.693);
-    --color-fg-min: oklch(44% 0 250);
-    --color-fg-secondary: oklch(33.6% 0 326.034);
-    --color-fg: oklch(21.123% 0 250);
-    --color-fg-max: oklch(0% 0 250);
+    color-scheme: light only;
   }
 
   .color-scheme-dark {
-    --color-bg-max: oklch(0% 0 250);
-    --color-bg: oklch(17% 0.012 250);
-    --color-bg-min: oklch(38% 0 250);
-    --color-border: oklch(65% 0 250);
-    --color-fg-min: oklch(75% 0 250);
-    --color-fg-secondary: oklch(88.5% 0 250);
-    --color-fg: oklch(97.015% 0 250);
-    --color-fg-max: oklch(100% 0 250);
+    color-scheme: dark only;
   }
 
   /**

@@ -1,0 +1,40 @@
+:root {
+  --font-scale: max(1rem, 0.9375rem + 0.3125vw);
+
+  --font-size-step-n-4: 0.625rem;
+  --font-size-step-n-3: 0.75rem;
+  --font-size-step-n-2: 0.875em;
+  --font-size-step-n-1: 1rem;
+
+  --font-size-step-0: 1em;
+  --font-size-step-1: 1.2em;
+  --font-size-step-2: 1.5em;
+  --font-size-step-3: 1.75em;
+  --font-size-step-4: 2em;
+  --font-size-step-5: 2.5em;
+  --font-size-step-6: 2.3em;
+
+  --font-size-step-p-1: calc(1rem + 8cqi);
+
+  --line-height-step-n-4: 1.1;
+  --line-height-step-n-3: 1.2;
+  --line-height-step-n-2: 1.3;
+  --line-height-step-n-1: 1.4;
+  --line-height-step-0: 1.5;
+  --line-height-dynamic: calc(1em + 0.5rem);
+
+  --brand-color-orange: #ed7143;
+  --brand-color-brown: #462113;
+
+  --root-padding-inline: 3.75vw;
+  --root-padding-block: 3.75vw;
+
+  --color-bg-max: light-dark(oklch(100% 0 250), oklch(0% 0 250));
+  --color-bg: light-dark(oklch(97.015% 0 327.897), oklch(17% 0.012 250));
+  --color-bg-min: light-dark(oklch(83.279% 0 250), oklch(38% 0 250));
+  --color-border: light-dark(oklch(51% 0 109.693), oklch(65% 0 250));
+  --color-fg-min: light-dark(oklch(44% 0 250), oklch(75% 0 250));
+  --color-fg-secondary: light-dark(oklch(33.6% 0 326.034), oklch(88.5% 0 250));
+  --color-fg: light-dark(oklch(21.123% 0 250), oklch(97.015% 0 250));
+  --color-fg-max: light-dark(oklch(0% 0 250), oklch(100% 0 250));
+}
