@@ -28,6 +28,8 @@ declare global {
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_URL: string;
     DBRP_API_URL_BASE: string;
+    DBRP_API_GET_EPISODES_URL: string;
+    DBRP_API_GET_POSTS_URL: string;
     SHOP_ID: string;
   }
 
