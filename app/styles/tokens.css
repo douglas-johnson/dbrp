@@ -3,7 +3,7 @@
 
   --font-size-step-n-4: 0.625rem;
   --font-size-step-n-3: 0.75rem;
-  --font-size-step-n-2: 0.875em;
+  --font-size-step-n-2: 0.875rem;
   --font-size-step-n-1: 1rem;
 
   --font-size-step-0: 1em;
@@ -37,4 +37,6 @@
   --color-fg-secondary: light-dark(oklch(33.6% 0 326.034), oklch(88.5% 0 250));
   --color-fg: light-dark(oklch(21.123% 0 250), oklch(97.015% 0 250));
   --color-fg-max: light-dark(oklch(0% 0 250), oklch(100% 0 250));
+
+  --spotify-green: #1ed760;
 }
