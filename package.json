@@ -13,7 +13,8 @@
     "codegen": "shopify hydrogen codegen",
     "deploy": "npx shopify hydrogen deploy",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "plop": "plop"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
@@ -23,6 +24,7 @@
     "clsx": "^2.1.1",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
+    "html-to-text": "^10.0.1",
     "isbot": "^3.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -46,6 +48,7 @@
     "@storybook/react-vite": "^10.5.9",
     "@total-typescript/ts-reset": "^0.4.2",
     "@types/eslint": "^8.4.10",
+    "@types/html-to-text": "^9.0.4",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
     "@types/sanitize-html": "^2.11.0",
@@ -55,6 +58,7 @@
     "eslint-plugin-hydrogen": "0.12.2",
     "eslint-plugin-storybook": "^10.5.9",
     "playwright": "latest",
+    "plop": "^4.0.5",
     "prettier": "^2.8.4",
     "storybook": "^10.5.9",
     "typescript": "^5.2.2",
