@@ -209,6 +209,15 @@ export type ShopFragment = Pick<
   lowStockThreshold?: StorefrontAPI.Maybe<
     Pick<StorefrontAPI.Metafield, 'value'>
   >;
+  defaultPodcastCoverImage?: StorefrontAPI.Maybe<{
+    reference?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.MediaImage, 'id'> & {
+        image?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
+        >;
+      }
+    >;
+  }>;
 };
 
 export type HeaderQueryVariables = StorefrontAPI.Exact<{
@@ -228,6 +237,15 @@ export type HeaderQuery = {
     lowStockThreshold?: StorefrontAPI.Maybe<
       Pick<StorefrontAPI.Metafield, 'value'>
     >;
+    defaultPodcastCoverImage?: StorefrontAPI.Maybe<{
+      reference?: StorefrontAPI.Maybe<
+        Pick<StorefrontAPI.MediaImage, 'id'> & {
+          image?: StorefrontAPI.Maybe<
+            Pick<StorefrontAPI.Image, 'url' | 'altText' | 'width' | 'height'>
+          >;
+        }
+      >;
+    }>;
   };
   menu?: StorefrontAPI.Maybe<
     Pick<StorefrontAPI.Menu, 'id'> & {
@@ -1201,7 +1219,7 @@ interface GeneratedQueryTypes {
     return: RecommendedProductsQuery;
     variables: RecommendedProductsQueryVariables;
   };
-  '#graphql\n  fragment Shop on Shop {\n    id\n    name\n    description\n    primaryDomain {\n      url\n    }\n    brand {\n      logo {\n        image {\n          url\n        }\n      }\n    }\n\tlowStockThreshold: metafield(namespace: "custom", key: "low_stock_threshold") {\n    \tvalue\n  \t}\t  \n  }\n  query Header(\n    $country: CountryCode\n    $headerMenuHandle: String!\n    $language: LanguageCode\n  ) @inContext(language: $language, country: $country) {\n    shop {\n      ...Shop\n    }\n    menu(handle: $headerMenuHandle) {\n      ...Menu\n    }\n  }\n  #graphql\n  fragment MenuItem on MenuItem {\n    id\n    resourceId\n    tags\n    title\n    type\n    url\n  }\n  fragment ChildMenuItem on MenuItem {\n    ...MenuItem\n  }\n  fragment ParentMenuItem on MenuItem {\n    ...MenuItem\n    items {\n      ...ChildMenuItem\n    }\n  }\n  fragment Menu on Menu {\n    id\n    items {\n      ...ParentMenuItem\n    }\n  }\n\n': {
+  '#graphql\n  fragment Shop on Shop {\n    id\n    name\n    description\n    primaryDomain {\n      url\n    }\n    brand {\n      logo {\n        image {\n          url\n        }\n      }\n    }\n\tlowStockThreshold: metafield(namespace: "custom", key: "low_stock_threshold") {\n    \tvalue\n  \t}\n\tdefaultPodcastCoverImage: metafield(namespace: "custom", key: "default_podcast_cover_image") {\n\t\treference {\n\t\t\t... on MediaImage {\n\t\t\t\tid\n\t\t\t\timage {\n\t\t\t\t\turl\n\t\t\t\t\taltText\n\t\t\t\t\twidth\n\t\t\t\t\theight\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n  }\n  query Header(\n    $country: CountryCode\n    $headerMenuHandle: String!\n    $language: LanguageCode\n  ) @inContext(language: $language, country: $country) {\n    shop {\n      ...Shop\n    }\n    menu(handle: $headerMenuHandle) {\n      ...Menu\n    }\n  }\n  #graphql\n  fragment MenuItem on MenuItem {\n    id\n    resourceId\n    tags\n    title\n    type\n    url\n  }\n  fragment ChildMenuItem on MenuItem {\n    ...MenuItem\n  }\n  fragment ParentMenuItem on MenuItem {\n    ...MenuItem\n    items {\n      ...ChildMenuItem\n    }\n  }\n  fragment Menu on Menu {\n    id\n    items {\n      ...ParentMenuItem\n    }\n  }\n\n': {
     return: HeaderQuery;
     variables: HeaderQueryVariables;
   };
