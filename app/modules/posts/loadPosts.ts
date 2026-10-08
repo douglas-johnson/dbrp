@@ -1,22 +1,22 @@
-import {type Episode} from './types';
+import {type Post} from './types';
 import type {RouterContextProvider} from 'react-router';
 import {apiGetUrl, apiGetNextPageFromContentRange} from '../api.utilities';
 
 /**
- * Load Episodes
+ * Load Posts
  */
-export default async function loadEpisodes(
+export default async function loadPosts(
   context: Pick<RouterContextProvider, 'storefront' | 'withCache' | 'env'>,
   limit: number = 10,
   page: number = 1,
 ) {
   const {storefront, withCache, env} = context;
 
-  const url = apiGetUrl(env['DBRP_API_GET_EPISODES_URL'], limit, page);
+  const url = apiGetUrl(env['DBRP_API_GET_POSTS_URL'], limit, page);
 
   const cacheKey = [url];
 
-  const {data, response} = await withCache.fetch<Episode[]>(
+  const {data, response} = await withCache.fetch<Post[]>(
     url,
     {},
     {
@@ -29,7 +29,7 @@ export default async function loadEpisodes(
   if (!response.ok) {
     return {
       nextPage: 0,
-      episodes: [],
+      posts: [],
     };
   }
 
@@ -37,6 +37,6 @@ export default async function loadEpisodes(
     nextPage: apiGetNextPageFromContentRange(
       response.headers.get('content-range'),
     ),
-    episodes: data ?? [],
+    posts: data ?? [],
   };
 }

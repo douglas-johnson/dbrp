@@ -1,105 +1,34 @@
 import {Await, useLoaderData, Link} from 'react-router';
 import {Suspense} from 'react';
-import {Image, Money} from '@shopify/hydrogen';
 import type {Route} from './+types/($locale)._index';
-import type {
-  FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
+
+import loadPosts from '~/modules/posts/loadPosts';
+import PostPreview from '~/modules/posts/PostPreview.component';
 
 import loadEpisodes from '~/modules/episodes/loadEpisodes';
-import Episode from '~/components/Episode';
+import EpisodePreview from '~/modules/episodes/EpisodePreview.component';
+import EpisodeFeature from '~/modules/episodes/EpisodeFeature.component';
+
 import Heading from '~/components/heading/Heading';
+// import '~/modules/episodes/reel.css';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Dad Bod Rap Pod'}];
 };
 
 export async function loader({context}: Route.LoaderArgs) {
-  const {storefront} = context;
-  const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
-  const featuredCollection = collections.nodes[0];
-
-  const {blog} = await storefront.query(BLOGS_QUERY, {
-    variables: {
-      blogHandle: 'news',
-      first: 1,
-    },
-  });
-
-  const episodeData = loadEpisodes(context, 1);
-
+  const episodeData = loadEpisodes(context, 6);
+  const postsData = loadPosts(context, 6);
   return {
-    featuredCollection,
     episodeData,
-    article: blog?.articles.nodes[0] ?? null,
+    postsData,
   };
 }
-
-// NOTE: https://shopify.dev/docs/api/storefront/latest/objects/blog
-const BLOGS_QUERY = `#graphql
-  query Blog(
-    $language: LanguageCode
-    $blogHandle: String!
-    $first: Int
-    $last: Int
-    $startCursor: String
-    $endCursor: String
-  ) @inContext(language: $language) {
-    blog(handle: $blogHandle) {
-      title
-      seo {
-        title
-        description
-      }
-      articles(
-        first: $first,
-        last: $last,
-        before: $startCursor,
-        after: $endCursor
-      ) {
-        nodes {
-          ...ArticleItem
-        }
-        pageInfo {
-          hasPreviousPage
-          hasNextPage
-          hasNextPage
-          endCursor
-          startCursor
-        }
-
-      }
-    }
-  }
-  fragment ArticleItem on Article {
-    author: authorV2 {
-      name
-    }
-    contentHtml
-    handle
-    id
-    image {
-      id
-      altText
-      url
-      width
-      height
-    }
-    publishedAt
-    title
-    blog {
-      handle
-    }
-  }
-` as const;
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <>
-      {/* <FeaturedCollection collection={data.featuredCollection} /> */}
-      {/* <RecommendedProducts products={data.recommendedProducts} /> */}
       <header className="has-wide-width">
         <Heading headingLevel={1} className="dbrp-page-title">
           DBRP
@@ -118,29 +47,59 @@ export default function Homepage() {
           <a href="https://feeds.megaphone.fm/dadbodrappod">RSS Feed</a>
         </li>
       </menu>
-      <h2>News</h2>
-      <Suspense fallback={<div>Loading latest blog post</div>}>
-        <Await resolve={data.article}>
-          {(article) =>
-            article ? (
-              <p>
-                <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
-                  {article.title}
-                </Link>
-              </p>
-            ) : null
-          }
+      <h2>Latest Episode</h2>
+      <Suspense fallback={<div>Loading episodes</div>}>
+        <Await resolve={data.episodeData}>
+          {({episodes}) => {
+            const episode = episodes[0];
+            return <EpisodeFeature episode={episode} headingLevel={3} />;
+          }}
         </Await>
       </Suspense>
-      <h2>Latest Episode</h2>
-      <Suspense fallback={<div>Loading latest episode</div>}>
+      <h2>News</h2>
+      <Suspense fallback={<div>Loading latest posts</div>}>
+        <Await resolve={data.postsData}>
+          {({posts}) => (
+            <div className="dbrp-reel-outer has-full-width">
+              <ul
+                className="dbrp-reel"
+                style={
+                  {'--dbrp-reel-item-width': '15em'} as React.CSSProperties
+                }
+              >
+                {posts.map((post) => {
+                  return (
+                    <li className="dbrp-reel-item" key={post.id}>
+                      <PostPreview
+                        TagName="article"
+                        headingLevel={3}
+                        post={post}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+        </Await>
+      </Suspense>
+      <h2>More Episodes</h2>
+      <Suspense fallback={<div>Loading episodes</div>}>
         <Await resolve={data.episodeData}>
           {({episodes}) => (
             <>
-              <Episode episode={episodes[0]} headingLevel={3} />
+              <div className="dbrp-reel-outer has-full-width">
+                <ul className="dbrp-reel">
+                  {episodes.slice(1).map((episode) => (
+                    <li className="dbrp-reel-item" key={episode.id}>
+                      <EpisodePreview episode={episode} headingLevel={3} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <p>
                 <Link to={'/podcast/'}>
-                  <strong>More Episodes</strong>
+                  <strong>All Episodes</strong>
                 </Link>
               </p>
             </>
@@ -150,48 +109,3 @@ export default function Homepage() {
     </>
   );
 }
-
-function FeaturedCollection({
-  collection,
-}: {
-  collection: FeaturedCollectionFragment;
-}) {
-  if (!collection) return null;
-  const image = collection?.image;
-  return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image data={image} sizes="100vw" />
-        </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
-  );
-}
-
-const FEATURED_COLLECTION_QUERY = `#graphql
-  fragment FeaturedCollection on Collection {
-    id
-    title
-    image {
-      id
-      url
-      altText
-      width
-      height
-    }
-    handle
-  }
-  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...FeaturedCollection
-      }
-    }
-  }
-` as const;

@@ -236,7 +236,20 @@ const HEADER_QUERY = `#graphql
     }
 	lowStockThreshold: metafield(namespace: "custom", key: "low_stock_threshold") {
     	value
-  	}	  
+  	}
+	defaultPodcastCoverImage: metafield(namespace: "custom", key: "default_podcast_cover_image") {
+		reference {
+			... on MediaImage {
+				id
+				image {
+					url
+					altText
+					width
+					height
+				}
+			}
+		}
+	}
   }
   query Header(
     $country: CountryCode
